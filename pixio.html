@@ -11,7 +11,7 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   
   <link rel="icon" href="/src/Pixio.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="/src/Pixio.svg" />
@@ -168,7 +168,20 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 36px;
+      height: auto;
+      max-height: 40px;
+    }
+    .header-ad .ad-creative {
+      height: auto;
+      max-height: 36px;
+      width: auto;
+      max-width: 100%;
+    }
+    .header-ad .ad-creative img {
+      height: auto;
+      max-height: 36px;
+      width: auto;
+      max-width: 100%;
     }
 
     .main {
@@ -195,26 +208,32 @@
         max-width: 100%;
         height: 100%;
         height: 100dvh;
-        grid-template-rows: 44px minmax(0, 1fr);
+        grid-template-rows: auto minmax(0, 1fr);
         overflow: hidden;
       }
 
-      /* ---- Header fits screen width ---- */
+      /* ---- Header: row1 logo+actions, row2 ad below ---- */
       .header {
         width: 100%;
         max-width: 100%;
         box-sizing: border-box;
-        padding: 0 6px;
-        height: 44px;
-        gap: 4px;
-        grid-template-columns: auto minmax(0, 1fr) auto;
+        padding: 0;
+        height: auto;
+        gap: 0;
+        grid-template-columns: auto 1fr;
+        grid-template-rows: 44px auto;
         overflow: hidden;
+        align-items: center;
       }
       .logo {
+        grid-column: 1;
+        grid-row: 1;
         max-width: 72px;
         min-width: 0;
         overflow: hidden;
         flex-shrink: 1;
+        margin-inline-start: 8px;
+        align-self: center;
       }
       .logo svg {
         height: 18px;
@@ -222,42 +241,67 @@
         max-width: 72px;
         display: block;
       }
-      .header-ad {
-        min-width: 0 !important;
-        max-width: 100%;
-        overflow: hidden;
-        height: 28px;
-      }
-      .header-ad .ad-creative {
-        max-width: 100% !important;
-        width: 100%;
-        box-sizing: border-box;
-        font-size: 0.55rem;
-        padding: 3px 6px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        gap: 4px;
-      }
-      .header-ad .ad-cta { display: none !important; }
       .header-actions {
-        gap: 2px;
+        grid-column: 2;
+        grid-row: 1;
+        gap: 4px;
         flex-shrink: 0;
         max-width: none;
         overflow: visible;
+        justify-self: end;
+        margin-inline-end: 6px;
+        align-items: center;
       }
-      .header-actions .btn {
-        padding: 5px 6px;
-        font-size: 0.65rem;
-        white-space: nowrap;
-      }
+      .header-actions .btn,
       .header-actions .btn-icon {
-        width: 34px;
-        height: 34px;
+        height: 32px;
+        min-height: 32px;
+        box-sizing: border-box;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         flex-shrink: 0;
       }
-      /* Hide long labels on narrow header — keep Camera/Upload short */
-      #downloadBtn { padding: 5px 7px; }
+      .header-actions .btn {
+        padding: 0 8px;
+        font-size: 0.7rem;
+        white-space: nowrap;
+        line-height: 1;
+      }
+      .header-actions .btn-icon {
+        width: 32px;
+        padding: 0;
+      }
+      #downloadBtn { padding: 0 8px; }
+      /* Ad sits full-width under the header bar */
+      .header-ad {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        min-width: 0 !important;
+        max-width: 100%;
+        overflow: hidden;
+        height: auto;
+        max-height: 36px;
+        padding: 4px 8px;
+        border-top: 1px solid var(--border);
+        justify-content: center;
+        background: var(--bg-elevated);
+      }
+      .header-ad .ad-creative {
+        max-width: 100% !important;
+        width: auto;
+        height: auto;
+        max-height: 28px;
+        box-sizing: border-box;
+        padding: 0;
+      }
+      .header-ad .ad-creative img {
+        max-height: 28px;
+        width: auto;
+        height: auto;
+        max-width: 100%;
+      }
+      .header-ad:empty { display: none; padding: 0; border: none; }
 
       .main {
         width: 100%;
@@ -307,32 +351,14 @@
       }
       .status-bar { display: none !important; }
       .zoom-label { min-width: 36px; font-size: 0.65rem; flex-shrink: 0; }
-      .handle { width: 22px; height: 22px; }
+      .handle { width: 28px; height: 28px; }
+      .handle::after { inset: -16px; }
       .btn-icon { width: 34px; height: 34px; flex-shrink: 0; }
 
+      /* Hide footer/toolbar ads on mobile to free space */
       .ad-slot--toolbar {
-        display: flex !important;
-        flex: 1 1 100%;
-        order: 20;
-        width: 100%;
-        max-width: 100%;
-        margin: 0;
-        height: 36px;
-        min-width: 0;
-        box-sizing: border-box;
+        display: none !important;
       }
-      .ad-slot--toolbar .ad-creative {
-        width: 100% !important;
-        max-width: 100% !important;
-        height: 100%;
-        box-sizing: border-box;
-        font-size: 0.65rem;
-        padding: 6px 10px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .ad-slot--toolbar .ad-cta { display: none !important; }
 
       /* ---- Drawers host: no cover when closed ---- */
       .right-panels {
@@ -349,6 +375,7 @@
         overflow: hidden;
       }
       body.filters-open .right-panels,
+      body.filters-closing .right-panels,
       body.params-open .right-panels {
         display: block !important;
       }
@@ -382,14 +409,35 @@
         box-sizing: border-box;
         overflow: hidden;
       }
-      body.filters-open .sidebar {
+      body.filters-open .sidebar,
+      body.filters-closing .sidebar {
         display: flex !important;
         pointer-events: auto !important;
+      }
+      body.filters-open .sidebar {
         animation: pixioDrawerIn 0.32s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+      }
+      body.filters-closing .sidebar {
+        pointer-events: none !important;
+        animation: pixioDrawerOut 0.28s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+      }
+      body.filters-closing .right-panels {
+        display: block !important;
+        pointer-events: none !important;
+        background: rgba(0, 0, 0, 0.4) !important;
+        animation: pixioScrimOut 0.28s ease forwards;
       }
       @keyframes pixioDrawerIn {
         from { transform: translateX(100%); }
         to { transform: translateX(0); }
+      }
+      @keyframes pixioDrawerOut {
+        from { transform: translateX(0); }
+        to { transform: translateX(100%); }
+      }
+      @keyframes pixioScrimOut {
+        from { background: rgba(0, 0, 0, 0.4); }
+        to { background: rgba(0, 0, 0, 0); }
       }
       .sidebar-header {
         display: flex !important;
@@ -489,6 +537,7 @@
         margin-top: 6px;
         line-height: 1.35;
         word-break: break-word;
+	
       }
 
       /* Settings sheet from bottom + slide-up animation */
@@ -604,6 +653,7 @@
         box-sizing: border-box;
       }
       body.filters-open .mobile-filters-btn,
+      body.filters-closing .mobile-filters-btn,
       body.params-open .mobile-filters-btn {
         display: none !important;
       }
@@ -617,16 +667,18 @@
         @media (max-width: 480px) {
       .logo { max-width: 56px; }
       .logo svg { max-width: 56px; height: 16px; }
-      .header-actions .btn { font-size: 0.6rem; padding: 4px 5px; }
-      #downloadBtn { font-size: 0.6rem; }
+      .header-actions .btn { font-size: 0.65rem; padding: 0 6px; }
+      .header-actions .btn,
+      .header-actions .btn-icon { height: 30px; min-height: 30px; }
+      .header-actions .btn-icon { width: 30px; }
+      #downloadBtn { font-size: 0.65rem; }
       .filter-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
       }
       .params-body {
         grid-template-columns: 1fr !important;
       }
-      .ad-slot--toolbar { height: 32px; }
-      .ad-slot--toolbar .ad-creative { font-size: 0.6rem; padding: 4px 8px; }
+      /* toolbar ad already hidden on mobile */
     }
 
     @media (min-width: 901px) {
@@ -652,6 +704,9 @@
       cursor: default;
       background: var(--bg);
       min-height: 0;
+      touch-action: none;
+      -webkit-user-select: none;
+      user-select: none;
     }
     .canvas-wrap.has-image { cursor: grab; }
     .canvas-wrap.has-image.panning { cursor: grabbing; }
@@ -682,8 +737,8 @@
     }
     .handle {
       position: absolute;
-      width: 16px;
-      height: 16px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       background: var(--handle);
       border: 2px solid var(--handle-border);
@@ -692,8 +747,16 @@
       pointer-events: auto;
       cursor: grab;
       z-index: 5;
+      touch-action: none;
+      -webkit-touch-callout: none;
     }
     .handle:active { cursor: grabbing; }
+    .handle::after {
+      content: "";
+      position: absolute;
+      inset: -12px;
+      border-radius: 50%;
+    }
     .handle-label {
       position: absolute;
       top: 18px;
@@ -702,12 +765,20 @@
       font-size: 10px;
       font-weight: 600;
       color: var(--text);
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      padding: 1px 5px;
-      border-radius: 3px;
+      background: none;
+      border: none;
+      padding: 0;
+      border-radius: 0;
       white-space: nowrap;
       pointer-events: none;
+      /* Shadow contrasts with text so label stays readable on any image */
+      text-shadow:
+        0 0 3px var(--bg),
+        0 1px 2px var(--bg),
+        0 -1px 2px var(--bg),
+        1px 0 2px var(--bg),
+        -1px 0 2px var(--bg),
+        0 0 6px var(--bg);
     }
 
     .empty-state {
@@ -1002,6 +1073,80 @@
       text-decoration: none;
     }
     .credits a:hover { color: var(--text); text-decoration: underline; }
+    .credits-lead {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+	.credits-lead .lead-name:hover{text-decoration: underline;}
+    .credits-lead img {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--border);
+    }
+    .credits-lead .lead-name {
+      font-weight: 600;cursor:pointer;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+    }
+    .credits-team-btn {
+      display: inline;
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--text-muted);
+      text-decoration: underline;
+      cursor: pointer;
+      font: inherit;
+      font-size: inherit;
+    }
+    .credits-team-btn:hover { color: var(--text); }
+    .credits-modal {
+      max-width: 360px;
+    }
+    .credits-modal .lead-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .credits-modal .lead-row + .lead-row {
+      margin-bottom: 16px;
+    }
+    .credits-modal .lead-row img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--border);
+    }
+    .credits-modal .lead-row strong {
+      display: block;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+    .credits-modal .lead-row span {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+    .credits-modal ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 12px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+    .credits-modal ul a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+    .credits-modal ul a:hover { color: var(--text); text-decoration: underline; }
+    .credits-modal .modal-actions { justify-content: flex-end; }
 
     .btn {
       display: inline-flex;
@@ -1085,56 +1230,50 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Ad slots — compact, non-intrusive */
+    /* Ad slots — size follows the ad image (constrained max-height) */
     .ad-slot {
       display: flex;
-      /* display: none; */
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
       overflow: hidden;
     }
     .ad-creative {
-      width: 100%;
-      max-width: 520px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--space-2);
-      padding: 5px 12px;
+      display: inline-block;
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      max-height: 40px;
       border-radius: var(--radius-sm);
-      background: var(--bg-hover);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.72rem;
-      line-height: 1.3;
-      white-space: nowrap;
       overflow: hidden;
-      text-overflow: ellipsis;
-      transition: border-color var(--transition), color var(--transition);
+      text-decoration: none;
+      line-height: 0;
+      border: 1px solid var(--border);
+      background: transparent;
+      transition: border-color var(--transition), opacity var(--transition);
+      cursor: pointer;
     }
-    .ad-creative:hover {
-      border-color: var(--border-strong);
-      color: var(--text);
+    .ad-creative:hover { border-color: var(--border-strong); opacity: 0.92; }
+    .ad-creative img {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 40px;
+      object-fit: contain;
+      object-position: center;
+      pointer-events: none;
+      vertical-align: middle;
     }
-    .ad-creative strong { color: var(--text); font-weight: 600; }
-    .ad-creative .ad-cta {
-      flex-shrink: 0;
-      padding: 2px 8px;
-      border-radius: 999px;
-      border: 1px solid var(--border-strong);
-      font-size: 0.65rem;
-      font-weight: 600;
-      color: var(--text);
-    }
+    .ad-slot:empty { min-height: 0; display: none; }
     .ad-slot--toolbar {
       border-top: 1px solid var(--border);
       background: var(--bg-elevated);
       padding: 6px var(--space-3);
-      min-height: 40px;
+      min-height: 0;
     }
-    .ad-slot--toolbar .ad-creative { max-width: 640px; }
+    .ad-slot--toolbar .ad-creative { max-width: 100%; max-height: 44px; }
+    .ad-slot--toolbar .ad-creative img { max-height: 44px; }
 
     .empty-actions {
       display: flex;
@@ -1159,9 +1298,7 @@
     }
     .ad-slot--toolbar .ad-creative {
       max-width: 100%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      width: auto;
     }
     .filter-card.is-disabled {
       opacity: 0.4;
@@ -1185,22 +1322,25 @@
     }
     .ad-slot--toolbar {
       margin-inline-start: var(--space-4);
-      flex: 1 1 auto;
-      min-width: 160px;
+      flex: 0 1 auto;
+      min-width: 0;
       max-width: none;
-      height: 44px;
+      height: auto;
       display: flex;
-      align-items: stretch;
+      align-items: center;
+      justify-content: center;
     }
     .ad-slot--toolbar .ad-creative {
-      width: 100%;
-      max-width: none;
-      height: 100%;
-      padding: 8px 14px;
-      font-size: 0.78rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      max-height: 44px;
+      padding: 0;
+    }
+    .ad-slot--toolbar .ad-creative img {
+      max-height: 44px;
+      width: auto;
+      height: auto;
     }
   </style>
 </head>
@@ -1218,12 +1358,7 @@
           <text x="82" y="55" font-family="Arial,Helvetica,sans-serif" font-size="37" font-weight="700" letter-spacing="3" fill="currentColor">Pixio</text>
         </svg>
       </div>
-      <div class="header-ad ad-slot" aria-label="Advertisement">
-        <a class="ad-creative" href="#" onclick="return false;" title="Sample ad">
-          <span><strong>Sponsored</strong> · Your brand reaches photo creators</span>
-          <span class="ad-cta">Learn more</span>
-        </a>
-      </div>
+      <div class="header-ad ad-slot" id="adSlotHeader" aria-label="Advertisement"></div>
       <div class="header-actions">
         <button class="btn-icon" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">
           <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1249,6 +1384,7 @@
             </label>
             <div class="empty-actions">
               <button type="button" class="btn btn-primary" id="emptyCameraBtn">Take photo</button>
+              <button type="button" class="btn btn-ghost" id="emptyPasteBtn" title="Paste image from clipboard">Paste</button>
             </div>
           </div>
           <div class="viewport" id="viewport">
@@ -1281,12 +1417,7 @@
           <button class="btn-icon" id="zoomFitBtn" title="Fit" aria-label="Fit to view" disabled>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
           </button>
-          <div class="ad-slot ad-slot--toolbar" aria-label="Advertisement">
-            <a class="ad-creative" href="#" onclick="return false;" title="Sample ad">
-              <span><strong>Ad</strong> · Tools &amp; apps for creators</span>
-              <span class="ad-cta">Open</span>
-            </a>
-          </div>
+          <div class="ad-slot ad-slot--toolbar" id="adSlotToolbar" aria-label="Advertisement"></div>
         </div>
       </section>
 
@@ -1313,12 +1444,13 @@
           <div class="filter-grid" id="filterGrid" role="listbox" aria-label="Filters"></div>
           <div class="sidebar-footer">
             <button class="apply-btn" id="applyBtn" disabled>Apply</button>
-            <p class="credits">
-              Pixio · Assisted by <a href="https://x.ai/grok" target="_blank" rel="noopener">Grok</a> (xAI)<br />
-              Filters: <a href="https://github.com/silvia-odwyer/pixels.js" target="_blank" rel="noopener">Pixels.js</a>
-              · <a href="https://github.com/evanw/glfx.js" target="_blank" rel="noopener">glfx.js</a>
-              · <a href="https://github.com/reiinakano/arbitrary-image-stylization-tfjs" target="_blank" rel="noopener">Style Transfer (TF.js)</a>
-            </p>
+            <div class="credits">
+              <div class="credits-lead">
+                <img src="https://github.com/SMARTISSA.png" alt="SMARTISSA" width="28" height="28" loading="lazy" />
+                <span class="lead-name">SMARTISSA</span>
+              </div>
+              <button type="button" class="credits-team-btn" id="openCreditsBtn">Collaborators</button>
+            </div>
           </div>
         </aside>
       </div>
@@ -1344,6 +1476,34 @@
       <div class="modal-actions">
         <button class="btn btn-ghost" id="cameraCancelBtn">Cancel</button>
         <button class="btn btn-primary" id="cameraSnapBtn">Capture</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop" id="creditsModal" hidden role="dialog" aria-modal="true" aria-labelledby="creditsModalTitle">
+    <div class="modal credits-modal">
+      <h2 id="creditsModalTitle">Collaborators</h2>
+      <div class="lead-row">
+        <img src="https://github.com/SMARTISSA.png" alt="SMARTISSA" width="48" height="48" loading="lazy" />
+        <div>
+          <strong>SMARTISSA</strong>
+          <span>Company</span>
+        </div>
+      </div>
+      <div class="lead-row">
+        <img src="https://github.com/sheyware.png" alt="Pixio" width="48" height="48" loading="lazy" />
+        <div>
+          <strong>Sheyware</strong>
+          <span>Project leader</span>
+        </div>
+      </div>
+      <ul>
+        <li>With thanks to <a href="https://x.ai/grok" target="_blank" rel="noopener">Grok</a> (xAI) for implementation assistance</li>
+        <li>Filters: <a href="https://github.com/silvia-odwyer/pixels.js" target="_blank" rel="noopener">Pixels.js</a> — Silvia O&apos;Dwyer</li>
+        <li><a href="https://github.com/evanw/glfx.js" target="_blank" rel="noopener">glfx.js</a> — Evan Wallace</li>
+        <li>Style Transfer: <a href="https://github.com/reiinakano/arbitrary-image-stylization-tfjs" target="_blank" rel="noopener">Arbitrary Style Transfer (TF.js)</a> — Reiichiro Nakano</li>
+      </ul>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="creditsCloseBtn">Close</button>
       </div>
     </div>
   </div>
@@ -2397,7 +2557,7 @@
       return window.matchMedia("(max-width: 900px)").matches;
     }
     function openFilterDrawer() {
-      document.body.classList.remove("params-open");
+      document.body.classList.remove("params-open", "filters-closing");
       document.body.classList.add("filters-open");
       // Force reflow so slide-in transition runs after display:block
       const side = document.querySelector(".sidebar");
@@ -2412,20 +2572,22 @@
     }
     function closeFilterDrawer() {
       const side = document.querySelector(".sidebar");
-      if (side && document.body.classList.contains("filters-open")) {
+      if (side && document.body.classList.contains("filters-open") && !document.body.classList.contains("filters-closing")) {
         let finished = false;
-        const done = () => {
+        const done = (e) => {
           if (finished) return;
+          if (e && e.target !== side) return;
           finished = true;
-          document.body.classList.remove("filters-open");
+          document.body.classList.remove("filters-open", "filters-closing");
           side.style.transform = "";
-          side.removeEventListener("transitionend", done);
+          side.removeEventListener("animationend", done);
         };
-        side.style.transform = "translateX(100%)";
-        side.addEventListener("transitionend", done);
-        setTimeout(done, 340);
-      } else {
+        document.body.classList.add("filters-closing");
         document.body.classList.remove("filters-open");
+        side.addEventListener("animationend", done);
+        setTimeout(done, 320);
+      } else {
+        document.body.classList.remove("filters-open", "filters-closing");
       }
     }
     function openParamsSheet() {
@@ -2609,6 +2771,92 @@
         : '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>';
     }
 
+    async function pasteFromClipboard() {
+      try {
+        if (!navigator.clipboard || !navigator.clipboard.read) {
+          toast("Clipboard paste is not supported in this browser");
+          return;
+        }
+        const items = await navigator.clipboard.read();
+        for (const item of items) {
+          const type = item.types.find(t => t.startsWith("image/"));
+          if (!type) continue;
+          const blob = await item.getType(type);
+          const file = new File([blob], `paste-${Date.now()}.png`, { type: blob.type || "image/png" });
+          loadImage(file);
+          return;
+        }
+        toast("No image found in clipboard");
+      } catch (err) {
+        console.warn("Paste failed", err);
+        toast("Could not read clipboard (permission denied?)");
+      }
+    }
+
+    const ADS_CONFIG_URL = "https://raw.githubusercontent.com/SMARTISSA/SMARTISSA.github.io/refs/heads/main/ads/ads.config";
+
+    function parseAdsConfig(raw) {
+      // Accept slightly non-strict JSON (unquoted keys) from ads.config
+      try {
+        return JSON.parse(raw);
+      } catch (_) {
+        try {
+          const fixed = raw
+            .replace(/([{\[,]\s*)([A-Za-z_][A-Za-z0-9_]*)\s*:/g, '$1"$2":')
+            .replace(/'/g, '"');
+          return JSON.parse(fixed);
+        } catch (e2) {
+          console.warn("Failed to parse ads.config", e2);
+          return [];
+        }
+      }
+    }
+
+    function fillAdSlot(slot, ad) {
+      if (!slot || !ad || !ad.content) return;
+      slot.innerHTML = "";
+      const a = document.createElement("a");
+      a.className = "ad-creative";
+      a.href = ad.target || "#";
+      a.target = "_blank";
+      a.rel = "noopener noreferrer sponsored";
+      a.title = "Advertisement";
+      // Only the image is clickable area — link sizes to the image itself
+      const img = document.createElement("img");
+      img.src = ad.content;
+      img.alt = "Advertisement";
+      img.loading = "lazy";
+      img.decoding = "async";
+      img.draggable = false;
+      img.onerror = () => { slot.innerHTML = ""; };
+      a.appendChild(img);
+      slot.appendChild(a);
+    }
+
+    function pickRandomAd(ads) {
+      return ads[Math.floor(Math.random() * ads.length)];
+    }
+
+    async function loadAds() {
+      try {
+        const res = await fetch(ADS_CONFIG_URL, { cache: "no-store" });
+        if (!res.ok) throw new Error("ads config HTTP " + res.status);
+        const raw = await res.text();
+        const ads = parseAdsConfig(raw);
+        if (!Array.isArray(ads) || !ads.length) return;
+        const slots = [
+          $("#adSlotHeader"),
+          $("#adSlotToolbar")
+        ].filter(Boolean);
+        // Each slot gets a random ad from the config (independent picks)
+        slots.forEach(slot => {
+          fillAdSlot(slot, pickRandomAd(ads));
+        });
+      } catch (err) {
+        console.warn("Ads load failed", err);
+      }
+    }
+
     function bindEvents() {
       $("#fileInput").addEventListener("change", e => { if (e.target.files[0]) loadImage(e.target.files[0]); });
       $("#uploadBtn").addEventListener("click", () => $("#fileInput").click());
@@ -2676,6 +2924,12 @@
       }
       $("#cameraBtn")?.addEventListener("click", openCamera);
       $("#emptyCameraBtn")?.addEventListener("click", openCamera);
+      $("#emptyPasteBtn")?.addEventListener("click", pasteFromClipboard);
+      $("#openCreditsBtn")?.addEventListener("click", () => { $("#creditsModal").hidden = false; });
+      $("#creditsCloseBtn")?.addEventListener("click", () => { $("#creditsModal").hidden = true; });
+      $("#creditsModal")?.addEventListener("click", e => {
+        if (e.target === $("#creditsModal")) $("#creditsModal").hidden = true;
+      });
       $("#cameraCancelBtn")?.addEventListener("click", closeCamera);
       $("#cameraSnapBtn")?.addEventListener("click", snapCamera);
       $("#cameraInput")?.addEventListener("change", e => { if (e.target.files[0]) loadImage(e.target.files[0]); });
@@ -2750,27 +3004,86 @@
         setZoom(STATE.zoom * factor, e.clientX, e.clientY);
       }, { passive: false });
 
+      // Multi-touch pinch + single-finger pan (mobile-friendly)
+      const activePointers = new Map();
+      let pinchStartDist = 0;
+      let pinchStartZoom = 1;
+      let pinchCenter = { x: 0, y: 0 };
+
+      function pointerDist(a, b) {
+        const dx = a.x - b.x, dy = a.y - b.y;
+        return Math.hypot(dx, dy);
+      }
+      function pointerMid(a, b) {
+        return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+      }
+
       wrap.addEventListener("pointerdown", e => {
         if (!STATE.hasImage) return;
         if (e.target.closest(".handle")) return;
-        if (e.button !== 0) return;
-        STATE.isPanning = true;
-        STATE.panStart = { x: e.clientX - STATE.panX, y: e.clientY - STATE.panY };
-        wrap.classList.add("panning");
-        wrap.setPointerCapture(e.pointerId);
+        if (e.button !== 0 && e.pointerType === "mouse") return;
+        activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        try { wrap.setPointerCapture(e.pointerId); } catch (_) {}
+
+        if (activePointers.size === 1) {
+          STATE.isPanning = true;
+          STATE.panStart = { x: e.clientX - STATE.panX, y: e.clientY - STATE.panY };
+          wrap.classList.add("panning");
+        } else if (activePointers.size === 2) {
+          STATE.isPanning = false;
+          wrap.classList.remove("panning");
+          const pts = [...activePointers.values()];
+          pinchStartDist = pointerDist(pts[0], pts[1]) || 1;
+          pinchStartZoom = STATE.zoom;
+          pinchCenter = pointerMid(pts[0], pts[1]);
+        }
       });
       wrap.addEventListener("pointermove", e => {
-        if (!STATE.isPanning || !STATE.hasImage) return;
-        STATE.panX = e.clientX - STATE.panStart.x;
-        STATE.panY = e.clientY - STATE.panStart.y;
-        applyViewportTransform();
+        if (!STATE.hasImage || !activePointers.has(e.pointerId)) return;
+        activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+        if (activePointers.size >= 2) {
+          const pts = [...activePointers.values()];
+          const dist = pointerDist(pts[0], pts[1]) || 1;
+          const mid = pointerMid(pts[0], pts[1]);
+          const factor = dist / pinchStartDist;
+          setZoom(pinchStartZoom * factor, mid.x, mid.y);
+          // slight pan follow for pinch center drift
+          const dx = mid.x - pinchCenter.x;
+          const dy = mid.y - pinchCenter.y;
+          if (dx || dy) {
+            STATE.panX += dx;
+            STATE.panY += dy;
+            pinchCenter = mid;
+            applyViewportTransform();
+          }
+          return;
+        }
+        if (STATE.isPanning) {
+          STATE.panX = e.clientX - STATE.panStart.x;
+          STATE.panY = e.clientY - STATE.panStart.y;
+          applyViewportTransform();
+        }
       });
-      wrap.addEventListener("pointerup", e => {
-        if (!STATE.isPanning) return;
-        STATE.isPanning = false;
-        wrap.classList.remove("panning");
+      function endPointer(e) {
+        activePointers.delete(e.pointerId);
+        if (activePointers.size < 2) {
+          pinchStartDist = 0;
+        }
+        if (activePointers.size === 0) {
+          STATE.isPanning = false;
+          wrap.classList.remove("panning");
+        } else if (activePointers.size === 1) {
+          // resume pan from remaining finger
+          const remaining = [...activePointers.values()][0];
+          STATE.isPanning = true;
+          STATE.panStart = { x: remaining.x - STATE.panX, y: remaining.y - STATE.panY };
+          wrap.classList.add("panning");
+        }
         try { wrap.releasePointerCapture(e.pointerId); } catch (_) {}
-      });
+      }
+      wrap.addEventListener("pointerup", endPointer);
+      wrap.addEventListener("pointercancel", endPointer);
 
       const zone = $("#dropZone");
       ["dragenter", "dragover"].forEach(ev => {
@@ -2792,12 +3105,13 @@
     }
 
     async function boot() {
-      document.body.classList.remove("filters-open", "params-open");
+      document.body.classList.remove("filters-open", "filters-closing", "params-open");
       initTheme();
       bindEvents();
       buildCatNav();
       updateHistoryButtons();
       showEmptyState();
+      loadAds();
       STATE.sampleCanvas = await loadSampleCanvas();
       buildFilterGrid();
     }
