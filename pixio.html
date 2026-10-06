@@ -160,8 +160,8 @@
       background: var(--bg-elevated);
       z-index: 30;
     }
-    .logo { display: flex; align-items: center; height: 32px; color: var(--text); flex-shrink: 0; }
-    .logo svg { height: 100%; width: auto; }
+    .logo { display: flex; align-items: center; height: 40px; color: var(--text); flex-shrink: 0; }
+    .logo svg { height: 100%; width: auto; max-height: 40px; }
     .header-actions { display: flex; align-items: center; gap: var(--space-2); flex-shrink: 0; }
     .header-ad {
       min-width: 0;
@@ -228,17 +228,18 @@
       .logo {
         grid-column: 1;
         grid-row: 1;
-        max-width: 72px;
+        max-width: none;
         min-width: 0;
+        height: 36px;
         overflow: hidden;
         flex-shrink: 1;
         margin-inline-start: 8px;
         align-self: center;
       }
       .logo svg {
-        height: 18px;
+        height: 36px;
         width: auto;
-        max-width: 72px;
+        max-width: min(160px, 42vw);
         display: block;
       }
       .header-actions {
@@ -537,7 +538,6 @@
         margin-top: 6px;
         line-height: 1.35;
         word-break: break-word;
-	
       }
 
       /* Settings sheet from bottom + slide-up animation */
@@ -665,8 +665,8 @@
     .params-header-actions { display: none; }
 
         @media (max-width: 480px) {
-      .logo { max-width: 56px; }
-      .logo svg { max-width: 56px; height: 16px; }
+      .logo { height: 32px; max-width: none; }
+      .logo svg { height: 32px; max-width: min(140px, 40vw); }
       .header-actions .btn { font-size: 0.65rem; padding: 0 6px; }
       .header-actions .btn,
       .header-actions .btn-icon { height: 30px; min-height: 30px; }
@@ -1080,7 +1080,6 @@
       gap: 8px;
       margin-bottom: 6px;
     }
-	.credits-lead .lead-name:hover{text-decoration: underline;}
     .credits-lead img {
       width: 28px;
       height: 28px;
@@ -1089,9 +1088,14 @@
       border: 1px solid var(--border);
     }
     .credits-lead .lead-name {
-      font-weight: 600;cursor:pointer;
+      font-weight: 600;
       color: var(--text-muted);
       font-size: 0.72rem;
+      text-decoration: none;
+    }
+    .credits-lead a.lead-name:hover {
+      color: var(--text);
+      text-decoration: underline;
     }
     .credits-team-btn {
       display: inline;
@@ -1128,6 +1132,13 @@
       display: block;
       font-size: 0.95rem;
       color: var(--text);
+    }
+    .credits-modal .lead-row strong a {
+      color: var(--text);
+      text-decoration: none;
+    }
+    .credits-modal .lead-row strong a:hover {
+      text-decoration: underline;
     }
     .credits-modal .lead-row span {
       font-size: 0.75rem;
@@ -1447,7 +1458,7 @@
             <div class="credits">
               <div class="credits-lead">
                 <img src="https://github.com/SMARTISSA.png" alt="SMARTISSA" width="28" height="28" loading="lazy" />
-                <span class="lead-name">SMARTISSA</span>
+                <a class="lead-name" href="https://smartissa.github.io" target="_blank" rel="noopener">SMARTISSA</a>
               </div>
               <button type="button" class="credits-team-btn" id="openCreditsBtn">Collaborators</button>
             </div>
@@ -1482,17 +1493,18 @@
   <div class="modal-backdrop" id="creditsModal" hidden role="dialog" aria-modal="true" aria-labelledby="creditsModalTitle">
     <div class="modal credits-modal">
       <h2 id="creditsModalTitle">Collaborators</h2>
+      
       <div class="lead-row">
         <img src="https://github.com/SMARTISSA.png" alt="SMARTISSA" width="48" height="48" loading="lazy" />
         <div>
-          <strong>SMARTISSA</strong>
-          <span>Company</span>
+          <strong><a href="https://smartissa.github.io" target="_blank" rel="noopener">SMARTISSA</a></strong>
+          <span>Company · Project lead</span>
         </div>
       </div>
-      <div class="lead-row">
+	<div class="lead-row">
         <img src="https://github.com/sheyware.png" alt="Pixio" width="48" height="48" loading="lazy" />
         <div>
-          <strong>Sheyware</strong>
+          <strong><a href="https://github.com/Sheyware" target="_blank" rel="noopener">Sheyware</a></strong>
           <span>Project leader</span>
         </div>
       </div>
@@ -1933,8 +1945,14 @@
     }
 
     function undo() {
+      // Uncommitted filter preview: revert display to last commit and clear selection
+      if (STATE.dirty) {
+        discardPreview();
+        clearSelection();
+        updateHistoryButtons();
+        return;
+      }
       if (STATE.historyIndex <= 0) return;
-      discardPreview();
       STATE.historyIndex--;
       restoreFromHistory();
     }
@@ -1960,8 +1978,8 @@
     }
 
     function updateHistoryButtons() {
-      const hasPast = STATE.historyIndex > 0;
-      const hasFuture = STATE.historyIndex >= 0 && STATE.historyIndex < STATE.history.length - 1;
+      const hasPast = STATE.historyIndex > 0 || STATE.dirty;
+      const hasFuture = !STATE.dirty && STATE.historyIndex >= 0 && STATE.historyIndex < STATE.history.length - 1;
       $("#undoBtn").disabled = !hasPast;
       $("#redoBtn").disabled = !hasFuture;
       $("#resetBtn").disabled = !STATE.hasImage || STATE.historyIndex <= 0;
@@ -2303,6 +2321,7 @@
         drawDisplay(result);
         updateStatus();
         updateApplyBtn();
+        updateHistoryButtons();
       } catch (e) {
         console.error(e);
         if (token === STATE._previewToken) toastError(e.message || "Filter failed");
@@ -2325,6 +2344,7 @@
       // Deselect filter after apply: keep list scroll position,
       // clear active card, hide settings, remove handles
       clearSelection();
+      updateHistoryButtons();
     }
 
     function discardPreview() {
@@ -2334,6 +2354,7 @@
       if (STATE.committedCanvas) drawDisplay(STATE.committedCanvas);
       updateStatus();
       updateApplyBtn();
+      updateHistoryButtons();
     }
 
     function clearHandles() {
@@ -2430,9 +2451,13 @@
       const panel = $("#paramsPanel");
       const body = $("#paramsBody");
       const visibleParams = (filter.params || []).filter(p => !p.hidden);
+      const hasSettings = visibleParams.length > 0 || !!filter.handle;
 
-      if (!visibleParams.length && !filter.handle) {
+      // Desktop: only show params panel when the filter has settings
+      // Mobile: always show (Apply button at minimum)
+      if (!hasSettings && !isMobileLayout()) {
         panel.classList.remove("visible");
+        body.innerHTML = "";
         return;
       }
 
@@ -2628,6 +2653,7 @@
     }
 
     function selectFilter(filter, cardEl) {
+      // Switching filter drops any previous uncommitted settings/preview
       if (STATE.dirty) discardPreview();
       $$(".filter-card").forEach(c => c.classList.remove("active"));
       cardEl.classList.add("active");
@@ -2635,14 +2661,12 @@
       initParamsForFilter(filter);
       showParams(filter);
       setupHandles(filter);
+      // Apply filter to main display (thumbs stay based on last commit)
       livePreview();
       if (isMobileLayout()) {
-        if (filterHasSettings(filter)) {
-          // Close full-screen filters; open settings sheet under image
-          closeFilterDrawer();
-          openParamsSheet();
-        }
-        // Filters without settings stay in drawer for quick browsing
+        // Always show settings sheet (Apply at minimum) after picking a filter
+        closeFilterDrawer();
+        openParamsSheet();
       }
     }
 
@@ -2746,10 +2770,13 @@
     }
 
     function download() {
-      if (!STATE.committedCanvas || !STATE.hasImage) return;
+      if (!STATE.hasImage) return;
+      // Download exactly what is on screen (preview if uncommitted, else last commit)
+      const source = (STATE.dirty && STATE.previewCanvas) ? STATE.previewCanvas : STATE.committedCanvas;
+      if (!source) return;
       const link = document.createElement("a");
       link.download = `pixio-${Date.now()}.png`;
-      link.href = STATE.committedCanvas.toDataURL("image/png");
+      link.href = source.toDataURL("image/png");
       link.click();
     }
 
