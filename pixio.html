@@ -54,9 +54,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/gh/silvia-odwyer/pixels.js/dist/Pixels.js"></script>
-  <script src="https://evanw.github.io/glfx.js/glfx.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+  <script src="src/Pixels.js"></script>
+  <script src="src/glfx.js/glfx.js"></script>
+  <script src="src/tf.min.js"></script>
   <style>
     :root {
       --bg: #0a0a0a;
@@ -2142,8 +2142,8 @@
     }
 
     const STYLE_MODEL_URLS = {
-      style: "https://reiinakano.com/arbitrary-image-stylization-tfjs/saved_model_style_js/model.json",
-      transform: "https://reiinakano.com/arbitrary-image-stylization-tfjs/saved_model_transformer_separable_js/model.json"
+      style: "src/saved_model_style_js.json",
+      transform: "src/saved_model_transformer_separable_js.json"
     };
 
     async function ensureStyleModel() {
