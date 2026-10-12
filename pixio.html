@@ -1,43 +1,32 @@
-<!DOCTYPE html>
-<!--
-  Pixio — Free Online Photo Filters & Instant Image Editor
-  Author / product: Project owner
-  Implementation assistance: Grok (xAI)
-  Libraries:
-    - Pixels.js — Silvia O'Dwyer (Apache-2.0) https://github.com/silvia-odwyer/pixels.js
-    - glfx.js — Evan Wallace (MIT) https://github.com/evanw/glfx.js
-    - Arbitrary Style Transfer (TF.js) — Reiichiro Nakano models + TensorFlow.js
--->
-<html lang="en" data-theme="dark">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<html lang="en" data-theme="dark"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   
-  <link rel="icon" href="/src/Pixio.svg" type="image/svg+xml" />
-  <link rel="apple-touch-icon" href="/src/Pixio.svg" />
+  <link rel="icon" href="/src/Pixio.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/src/Pixio.svg">
   
   <title>Pixio — Free Online Photo Filters &amp; Instant Image Editor</title>
-  <meta name="description" content="Free unlimited online photo editor — no signup, no watermarks. Apply cinematic filters, color grading, artistic effects and AI style transfer in your browser. Instant previews, fully free." />
-  <meta name="keywords" content="free photo editor, free photo filters, unlimited, online photo editor free, free image filters, free style transfer, edit photos free online, Pixio" />
-  <meta name="robots" content="index, follow" />
-  <meta name="author" content="Pixio" />
-  <meta name="theme-color" content="#0a0a0a" />
-  <link rel="canonical" href="https://smartissa.github.io/pixio/" />
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Pixio — Free Online Photo Filters & Instant Image Editor" />
-  <meta property="og:description" content="100% free photo filters and pro edits in one tap. No signup. Upload, preview, download — free forever in your browser." />
-  <meta property="og:url" content="https://smartissa.github.io/pixio.html/" />
-  <meta property="og:site_name" content="Pixio" />
-  <meta property="og:locale" content="en_US" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Pixio — Free Unlimitted Online Photo Filters & Instant Image Editor" />
-  <meta name="twitter:description" content="100% free photo filters and pro edits. No signup, Unlimitted, no watermarks. Edit online in seconds." />
+  <meta name="description" content="Free unlimited online photo editor — no signup, no watermarks. Apply cinematic filters, color grading, artistic effects and AI style transfer in your browser. Instant previews, fully free.">
+  <meta name="keywords" content="free photo editor, free photo filters, unlimited, online photo editor free, free image filters, free style transfer, edit photos free online, Pixio">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="Pixio">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="canonical" href="https://smartissa.github.io/pixio/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Pixio — Free Online Photo Filters &amp; Instant Image Editor">
+  <meta property="og:description" content="100% free photo filters and pro edits in one tap. No signup. Upload, preview, download — free forever in your browser.">
+  <meta property="og:url" content="https://smartissa.github.io/pixio.html/">
+  <meta property="og:site_name" content="Pixio">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pixio — Free Unlimitted Online Photo Filters &amp; Instant Image Editor">
+  <meta name="twitter:description" content="100% free photo filters and pro edits. No signup, Unlimitted, no watermarks. Edit online in seconds.">
 
-  <meta property="og:image" content="https://raw.githubusercontent.com/SMARTISSA/SMARTISSA.github.io/refs/heads/main/src/pixio.png" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Pixio — Free Online Photo Filters" />
-  <meta name="twitter:image" content="https://raw.githubusercontent.com/SMARTISSA/SMARTISSA.github.io/refs/heads/main/src/pixio.png" />
+  <meta property="og:image" content="https://raw.githubusercontent.com/SMARTISSA/SMARTISSA.github.io/refs/heads/main/src/pixio.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Pixio — Free Online Photo Filters">
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/SMARTISSA/SMARTISSA.github.io/refs/heads/main/src/pixio.png">
 
   <script type="application/ld+json">
   {
@@ -51,12 +40,12 @@
     "description": "Free browser photo editor with cinematic filters, color grading, artistic effects and AI style transfer. No signup required."
   }
   </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <script src="src/Pixels.js"></script>
   <script src="src/glfx.js"></script>
-  <script src="src/tf.min.js"></script>
+  <!-- tf.min.js and ort.min.js loaded on-demand when Style Transfer is first used (keeps initial page load fast ~2MB saved) -->
   <style>
     :root {
       --bg: #0a0a0a;
@@ -786,17 +775,57 @@
       inset: 0;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: stretch;
       justify-content: center;
       text-align: center;
       color: var(--text-muted);
       pointer-events: none;
       z-index: 2;
+      padding: var(--space-4);
+      box-sizing: border-box;
+      gap: var(--space-3);
     }
     .empty-state[hidden] { display: none !important; }
-    .empty-state h1 { font-size: 1.2rem; font-weight: 600; color: var(--text); margin-bottom: var(--space-2); }
-    .empty-state p { font-size: 0.9rem; margin-bottom: var(--space-4); max-width: 280px; }
-    .empty-state .upload-zone { pointer-events: auto; }
+    .empty-state .upload-zone {
+      pointer-events: auto;
+      flex: 1 1 auto;
+      width: 100%;
+      min-height: 220px;
+      max-height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-3);
+      box-sizing: border-box;
+      margin: 0;
+      padding: var(--space-5) var(--space-4);
+      text-align: center;
+    }
+    .empty-state .upload-zone h1 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0;
+      flex-shrink: 0;
+    }
+    .empty-state .upload-zone p {
+      font-size: 0.9rem;
+      margin: 0;
+      max-width: 320px;
+      flex-shrink: 0;
+      color: var(--text-muted);
+    }
+    .empty-state .upload-zone > span {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+    .empty-state .empty-actions {
+      flex-shrink: 0;
+      align-self: center;
+      margin-top: var(--space-2);
+      pointer-events: auto;
+    }
     .empty-state .empty-actions,
     .empty-state .empty-actions * { pointer-events: auto; }
 
@@ -950,15 +979,50 @@
       pointer-events: none;
     }
     .st-loading:not([hidden]) { display: flex; }
+    .st-loading-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      padding: 20px 28px;
+      border-radius: 12px;
+      background: rgba(0,0,0,.5);
+      max-width: min(360px, 90%);
+      text-align: center;
+    }
     .st-loading-text {
-      font-size: 1.35rem;
+      font-size: 1.2rem;
       font-weight: 600;
       color: #fff;
       letter-spacing: 0.02em;
       text-shadow: 0 1px 8px rgba(0,0,0,.6);
-      padding: 12px 20px;
-      border-radius: 10px;
-      background: rgba(0,0,0,.35);
+    }
+    .st-loading-hint {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,.75);
+      line-height: 1.4;
+    }
+    .st-progress-track {
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.18);
+      overflow: hidden;
+    }
+    .st-progress-bar {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: #fff;
+      transition: width 0.35s ease;
+    }
+    .st-progress-bar.indeterminate {
+      width: 40%;
+      animation: st-progress-slide 1.4s ease-in-out infinite;
+    }
+    @keyframes st-progress-slide {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(350%); }
     }
     .canvas-wrap.is-stylizing #viewport {
       opacity: 0.45;
@@ -1204,6 +1268,12 @@
       background: var(--bg-hover);
     }
     .upload-zone input { display: none; }
+    /* Full-area drop target in empty workspace */
+    .empty-state .upload-zone {
+      display: flex;
+      flex-direction: column;
+      padding: var(--space-5) var(--space-4);
+    }
 
     .toast-container {
       position: fixed;
@@ -1361,25 +1431,23 @@
       <div class="logo" aria-label="Pixio">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 80" height="32">
           <g fill="currentColor">
-            <rect x="18" y="18" width="20" height="20"/>
-            <rect x="44" y="18" width="20" height="20"/>
-            <rect x="18" y="44" width="20" height="20"/>
-            <rect x="44" y="44" width="20" height="20"/>
+            <rect x="18" y="18" width="20" height="20"></rect>
+            <rect x="44" y="18" width="20" height="20"></rect>
+            <rect x="18" y="44" width="20" height="20"></rect>
+            <rect x="44" y="44" width="20" height="20"></rect>
           </g>
           <text x="82" y="55" font-family="Arial,Helvetica,sans-serif" font-size="37" font-weight="700" letter-spacing="3" fill="currentColor">Pixio</text>
         </svg>
       </div>
-      <div class="header-ad ad-slot" id="adSlotHeader" aria-label="Advertisement"></div>
+      <div class="header-ad ad-slot" id="adSlotHeader" aria-label="Advertisement"><a class="ad-creative" href="https://smartissa.github.io" target="_blank" rel="noopener noreferrer sponsored" title="Advertisement"><img src="https://raw.githubusercontent.com/SMARTISSA/SMARTISSA.github.io/refs/heads/main/ads/ad1.png" alt="Advertisement" loading="lazy" decoding="async" draggable="false"></a></div>
       <div class="header-actions">
         <button class="btn-icon" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">
-          <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-          </svg>
+          <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
         </button>
         <button class="btn btn-ghost" id="cameraBtn" title="Take photo">Camera</button>
         <button class="btn btn-ghost" id="uploadBtn">Upload</button>
-        <input type="file" id="cameraInput" accept="image/*" capture="environment" hidden />
-        <button class="btn btn-primary" id="downloadBtn" disabled>Download</button>
+        <input type="file" id="cameraInput" accept="image/*" capture="environment" hidden="">
+        <button class="btn btn-primary" id="downloadBtn" disabled="">Download</button>
       </div>
     </header>
 
@@ -1387,48 +1455,54 @@
       <section class="workspace">
         <div class="canvas-wrap" id="canvasWrap">
           <div class="empty-state" id="emptyState">
-            <h1 style="font-size:1.2rem;font-weight:600;color:var(--text);margin-bottom:var(--space-2)">Drop a photo. Get a pro look.</h1>
-            <p>One-tap cinematic filters &amp; fine-tuned edits — drop a file or take a photo</p>
             <label class="upload-zone" id="dropZone">
-              <input type="file" id="fileInput" accept="image/*" />
+              <input type="file" id="fileInput" accept="image/*">
+              <h1>Drop a photo. Get a pro look.</h1>
+              <p>One-tap cinematic filters &amp; fine-tuned edits — drop a file or take a photo</p>
               <span>Drop image here or click to browse</span>
+              <div class="empty-actions">
+                <button type="button" class="btn btn-primary" id="emptyCameraBtn">Take photo</button>
+                <button type="button" class="btn btn-ghost" id="emptyPasteBtn" title="Paste image from clipboard">Paste</button>
+              </div>
             </label>
-            <div class="empty-actions">
-              <button type="button" class="btn btn-primary" id="emptyCameraBtn">Take photo</button>
-              <button type="button" class="btn btn-ghost" id="emptyPasteBtn" title="Paste image from clipboard">Paste</button>
-            </div>
           </div>
           <div class="viewport" id="viewport">
-            <div class="stage" id="stage" hidden>
+            <div class="stage" id="stage" hidden="">
               <canvas id="mainCanvas"></canvas>
               <div class="handles-layer" id="handlesLayer"></div>
             </div>
           </div>
-          <div class="st-loading" id="stLoading" hidden>
-            <span class="st-loading-text">Stylizing…</span>
+          <div class="st-loading" id="stLoading" hidden="">
+            <div class="st-loading-inner">
+              <span class="st-loading-text">Stylizing…</span>
+              <div class="st-progress-track" hidden="">
+                <div class="st-progress-bar" id="stProgressBar"></div>
+              </div>
+              <span class="st-loading-hint" hidden="">Please be patient — first-time loading can take up to 2 minutes.</span>
+            </div>
           </div>
         </div>
         <div class="toolbar">
-          <button class="btn-icon" id="undoBtn" disabled title="Undo (Ctrl+Z)" aria-label="Undo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6.36 2.64L3 13"/></svg>
+          <button class="btn-icon" id="undoBtn" disabled="" title="Undo (Ctrl+Z)" aria-label="Undo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"></path><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6.36 2.64L3 13"></path></svg>
           </button>
-          <button class="btn-icon" id="redoBtn" disabled title="Redo (Ctrl+Y)" aria-label="Redo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6.36 2.64L21 13"/></svg>
+          <button class="btn-icon" id="redoBtn" disabled="" title="Redo (Ctrl+Y)" aria-label="Redo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"></path><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6.36 2.64L21 13"></path></svg>
           </button>
-          <button class="btn-icon" id="resetBtn" disabled title="Reset" aria-label="Reset">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          <button class="btn-icon" id="resetBtn" disabled="" title="Reset" aria-label="Reset">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
           </button>
-          <button class="btn-icon" id="zoomOutBtn" title="Zoom out" aria-label="Zoom out" disabled>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35M8 11h6"/></svg>
+          <button class="btn-icon" id="zoomOutBtn" title="Zoom out" aria-label="Zoom out" disabled="">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35M8 11h6"></path></svg>
           </button>
           <span class="zoom-label" id="zoomLabel">100%</span>
-          <button class="btn-icon" id="zoomInBtn" title="Zoom in" aria-label="Zoom in" disabled>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6"/></svg>
+          <button class="btn-icon" id="zoomInBtn" title="Zoom in" aria-label="Zoom in" disabled="">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35M11 8v6M8 11h6"></path></svg>
           </button>
-          <button class="btn-icon" id="zoomFitBtn" title="Fit" aria-label="Fit to view" disabled>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+          <button class="btn-icon" id="zoomFitBtn" title="Fit" aria-label="Fit to view" disabled="">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
           </button>
-          <div class="ad-slot ad-slot--toolbar" id="adSlotToolbar" aria-label="Advertisement"></div>
+          <div class="ad-slot ad-slot--toolbar" id="adSlotToolbar" aria-label="Advertisement"><a class="ad-creative" href="https://smartissa.github.io" target="_blank" rel="noopener noreferrer sponsored" title="Advertisement"><img src="https://raw.githubusercontent.com/SMARTISSA/SMARTISSA.github.io/refs/heads/main/ads/ad1.png" alt="Advertisement" loading="lazy" decoding="async" draggable="false"></a></div>
         </div>
       </section>
 
@@ -1443,21 +1517,21 @@
           </div>
           <div class="params-body" id="paramsBody"></div>
           <div class="params-footer">
-            <button class="apply-btn" id="applyBtnMobile" disabled>Apply</button>
+            <button class="apply-btn" id="applyBtnMobile" disabled="">Apply</button>
           </div>
         </div>
         <aside class="sidebar">
           <div class="sidebar-header">
-            <span>Filters <span id="filterCount" style="font-weight:400;color:var(--text-dim);font-size:0.75rem"></span></span>
+            <span>Filters <span id="filterCount" style="font-weight:400;color:var(--text-dim);font-size:0.75rem">10</span></span>
             <button type="button" class="drawer-close" id="closeFiltersBtn" aria-label="Close filters">×</button>
           </div>
-          <div class="cat-nav" id="catNav" role="tablist"></div>
-          <div class="filter-grid" id="filterGrid" role="listbox" aria-label="Filters"></div>
+          <div class="cat-nav" id="catNav" role="tablist"><button class="cat-btn active" data-cat="popular">Popular</button><button class="cat-btn" data-cat="color">Color</button><button class="cat-btn" data-cat="vintage">Vintage</button><button class="cat-btn" data-cat="blur">Blur &amp; Focus</button><button class="cat-btn" data-cat="distort">Distortion</button><button class="cat-btn" data-cat="artistic">Artistic</button><button class="cat-btn" data-cat="noise">Noise &amp; Grain</button><button class="cat-btn" data-cat="structure">Structure</button><button class="cat-btn cat-advanced" data-cat="styletransfer">Style Transfer</button></div>
+          <div class="filter-grid" id="filterGrid" role="listbox" aria-label="Filters"><button class="filter-card" data-id="sat_adj" title="Saturation Boost"><canvas width="68" height="68"></canvas><span>Saturation Boost</span></button><button class="filter-card" data-id="swirl" title="Swirl"><canvas width="68" height="68"></canvas><span>Swirl</span></button><button class="filter-card" data-id="offset" title="RGB Offset"><canvas width="68" height="68"></canvas><span>RGB Offset</span></button><button class="filter-card" data-id="colorHalftone" title="Color Halftone"><canvas width="68" height="68"></canvas><span>Color Halftone</span></button><button class="filter-card" data-id="zoomBlur" title="Radial Blur"><canvas width="68" height="68"></canvas><span>Radial Blur</span></button><button class="filter-card" data-id="denoise" title="Denoise"><canvas width="68" height="68"></canvas><span>Denoise</span></button><button class="filter-card" data-id="unsharpMask" title="Sharpen"><canvas width="68" height="68"></canvas><span>Sharpen</span></button><button class="filter-card" data-id="incbrightness2" title="Brighten Strong"><canvas width="68" height="68"></canvas><span>Brighten Strong</span></button><button class="filter-card" data-id="blues" title="Cool Blue"><canvas width="68" height="68"></canvas><span>Cool Blue</span></button><button class="filter-card" data-id="teal_min_noise" title="Teal Cast"><canvas width="68" height="68"></canvas><span>Teal Cast</span></button></div>
           <div class="sidebar-footer">
-            <button class="apply-btn" id="applyBtn" disabled>Apply</button>
+            <button class="apply-btn" id="applyBtn" disabled="">Apply</button>
             <div class="credits">
               <div class="credits-lead">
-                <img src="https://github.com/SMARTISSA.png" alt="SMARTISSA" width="28" height="28" loading="lazy" />
+                <img src="https://github.com/SMARTISSA.png" alt="SMARTISSA" width="28" height="28" loading="lazy">
                 <a class="lead-name" href="https://smartissa.github.io" target="_blank" rel="noopener">SMARTISSA</a>
               </div>
               <button type="button" class="credits-team-btn" id="openCreditsBtn">Collaborators</button>
@@ -1468,7 +1542,7 @@
     </div>
   </div>
   <button type="button" class="mobile-filters-btn" id="openFiltersBtn" aria-label="Open filters" title="Swipe / tap for filters">Filters</button>
-  <div class="modal-backdrop" id="resetModal" hidden role="dialog" aria-modal="true" aria-labelledby="resetModalTitle">
+  <div class="modal-backdrop" id="resetModal" hidden="" role="dialog" aria-modal="true" aria-labelledby="resetModalTitle">
     <div class="modal">
       <h2 id="resetModalTitle">Reset image?</h2>
       <p>This restores the original upload and clears all applied edits. This cannot be undone from history.</p>
@@ -1478,11 +1552,11 @@
       </div>
     </div>
   </div>
-  <div class="modal-backdrop" id="cameraModal" hidden role="dialog" aria-modal="true" aria-label="Camera">
+  <div class="modal-backdrop" id="cameraModal" hidden="" role="dialog" aria-modal="true" aria-label="Camera">
     <div class="modal camera-modal">
       <h2>Take photo</h2>
       <div class="camera-view">
-        <video id="cameraVideo" autoplay playsinline muted></video>
+        <video id="cameraVideo" autoplay="" playsinline="" muted=""></video>
       </div>
       <div class="modal-actions">
         <button class="btn btn-ghost" id="cameraCancelBtn">Cancel</button>
@@ -1490,29 +1564,29 @@
       </div>
     </div>
   </div>
-  <div class="modal-backdrop" id="creditsModal" hidden role="dialog" aria-modal="true" aria-labelledby="creditsModalTitle">
+  <div class="modal-backdrop" id="creditsModal" hidden="" role="dialog" aria-modal="true" aria-labelledby="creditsModalTitle">
     <div class="modal credits-modal">
       <h2 id="creditsModalTitle">Collaborators</h2>
       
       <div class="lead-row">
-        <img src="https://github.com/SMARTISSA.png" alt="SMARTISSA" width="48" height="48" loading="lazy" />
+        <img src="https://github.com/SMARTISSA.png" alt="SMARTISSA" width="48" height="48" loading="lazy">
         <div>
           <strong><a href="https://smartissa.github.io" target="_blank" rel="noopener">SMARTISSA</a></strong>
           <span>Company · Project lead</span>
         </div>
       </div>
 	<div class="lead-row">
-        <img src="https://github.com/sheyware.png" alt="Pixio" width="48" height="48" loading="lazy" />
+        <img src="https://github.com/sheyware.png" alt="Pixio" width="48" height="48" loading="lazy">
         <div>
           <strong><a href="https://github.com/Sheyware" target="_blank" rel="noopener">Sheyware</a></strong>
           <span>Project leader</span>
         </div>
       </div>
       <ul>
-        <li>With thanks to <a href="https://x.ai/grok" target="_blank" rel="noopener">Grok</a> (xAI) for implementation assistance</li>
-        <li>Filters: <a href="https://github.com/silvia-odwyer/pixels.js" target="_blank" rel="noopener">Pixels.js</a> — Silvia O&apos;Dwyer</li>
-        <li><a href="https://github.com/evanw/glfx.js" target="_blank" rel="noopener">glfx.js</a> — Evan Wallace</li>
-        <li>Style Transfer: <a href="https://github.com/reiinakano/arbitrary-image-stylization-tfjs" target="_blank" rel="noopener">Arbitrary Style Transfer (TF.js)</a> — Reiichiro Nakano</li>
+        <li>Grok (xAI)</li>
+        <li>Silvia O'Dwyer</li>
+        <li>Evan Wallace</li>
+        <li>Reiichiro Nakano</li>
       </ul>
       <div class="modal-actions">
         <button class="btn btn-primary" id="creditsCloseBtn">Close</button>
@@ -1549,9 +1623,55 @@
       "teal_min_noise"  // Teal Cast
     ];
 
+    // Fast Neural Style (ONNX) — fixed styles; preview = effect on current image
+    // Models from https://github.com/onnx/models (validated/vision/style_transfer/fast_neural_style)
+    const ONNX_STYLE_FILTERS = [
+      {
+        id: "st_onnx_candy",
+        cat: "styletransfer",
+        name: "Candy Glow",
+        modelUrl: "src/models/candy-9.onnx",
+        type: "onnxstyle",
+        params: []
+      },
+      {
+        id: "st_onnx_mosaic",
+        cat: "styletransfer",
+        name: "Mosaic Blast",
+        modelUrl: "src/models/mosaic-9.onnx",
+        type: "onnxstyle",
+        params: []
+      },
+      {
+        id: "st_onnx_rain",
+        cat: "styletransfer",
+        name: "Rainy Muse",
+        modelUrl: "src/models/rain-princess-9.onnx",
+        type: "onnxstyle",
+        params: []
+      },
+      {
+        id: "st_onnx_udnie",
+        cat: "styletransfer",
+        name: "Udnie Wave",
+        modelUrl: "src/models/udnie-9.onnx",
+        type: "onnxstyle",
+        params: []
+      },
+      {
+        id: "st_onnx_pointilism",
+        cat: "styletransfer",
+        name: "Dotty Pop",
+        modelUrl: "src/models/pointilism-9.onnx",
+        type: "onnxstyle",
+        params: []
+      }
+    ];
+
     // Famous style images (preview = style artwork itself; transfer is expensive)
     // Each style: name + reference image URL/path only
     const STYLE_FILTERS = [
+      ...ONNX_STYLE_FILTERS,
       {
         id: "st_monalisa",
         cat: "styletransfer",
@@ -1839,7 +1959,11 @@
       draggingHandle: null,
       styleModel: null,
       styleModelLoading: null,
-      styleImages: {}
+      styleImages: {},
+      onnxSessions: {},
+      onnxLoading: null,
+      onnxReady: false,
+      onnxThumbCache: {}
     };
 
     const $ = (s, c = document) => c.querySelector(s);
@@ -2138,16 +2262,43 @@
       transform: "src/saved_model_transformer_separable_js.json"
     };
 
+    function loadScript(src) {
+      return new Promise((resolve, reject) => {
+        if (document.querySelector(`script[src="${src}"]`)) {
+          // already requested; wait a tick for global to appear
+          const check = () => {
+            if ((src.includes("tf.min") && typeof tf !== "undefined") ||
+                (src.includes("ort.min") && typeof ort !== "undefined")) {
+              resolve();
+            } else {
+              setTimeout(check, 30);
+            }
+          };
+          check();
+          return;
+        }
+        const s = document.createElement("script");
+        s.src = src;
+        s.async = true;
+        s.onload = () => resolve();
+        s.onerror = () => reject(new Error("Failed to load " + src));
+        document.head.appendChild(s);
+      });
+    }
+
     async function ensureStyleModel() {
       if (STATE.styleModel?.styleNet && STATE.styleModel?.transformNet) {
         return STATE.styleModel;
       }
       if (STATE.styleModelLoading) return STATE.styleModelLoading;
-      if (!tf) {
-        throw new Error("TensorFlow.js failed to load");
-      }
       STATE.styleModelLoading = (async () => {
         try {
+          if (typeof tf === "undefined") {
+            await loadScript("src/tf.min.js");
+          }
+          if (typeof tf === "undefined") {
+            throw new Error("TensorFlow.js failed to load");
+          }
           // Prefer WebGL for speed
           await tf.ready();
           const [styleNet, transformNet] = await Promise.all([
@@ -2255,38 +2406,236 @@
       return out;
     }
 
-    async function prepareStyleTransferCategory() {
-      // Show loading on image while models initialize; disable style cards
-      setStylizingUI(true, "Loading style engine…");
-      setStyleCardsEnabled(false);
+    const ONNX_WASM_PATH = "src/";
+
+    function configureOrt() {
+      if (typeof ort === "undefined") return;
+      // All WASM / binary assets load from the same local folder as ort.min.js
+      ort.env.wasm.wasmPaths = ONNX_WASM_PATH;
+      // Single-thread avoids SharedArrayBuffer / alignment issues in many browsers
       try {
-        await ensureStyleModel();
+        ort.env.wasm.numThreads = 1;
+        ort.env.wasm.simd = true;
+      } catch (_) {}
+    }
+
+    async function ensureOnnxModels(onProgress) {
+      if (STATE.onnxReady && Object.keys(STATE.onnxSessions).length === ONNX_STYLE_FILTERS.length) {
+        if (typeof onProgress === "function") onProgress(ONNX_STYLE_FILTERS.length, ONNX_STYLE_FILTERS.length);
+        return STATE.onnxSessions;
+      }
+      if (STATE.onnxLoading) return STATE.onnxLoading;
+      STATE.onnxLoading = (async () => {
+        try {
+          if (typeof ort === "undefined") {
+            await loadScript("src/ort.min.js");
+          }
+          if (typeof ort === "undefined") {
+            throw new Error("ONNX Runtime (ort.min.js) failed to load");
+          }
+          configureOrt();
+          const sessions = {};
+          const total = ONNX_STYLE_FILTERS.length;
+          let loaded = 0;
+          // Load models sequentially to limit peak memory; each is ~6.6 MB
+          for (const f of ONNX_STYLE_FILTERS) {
+            if (STATE.onnxSessions[f.id]) {
+              sessions[f.id] = STATE.onnxSessions[f.id];
+              loaded++;
+              if (typeof onProgress === "function") onProgress(loaded, total);
+              continue;
+            }
+            const session = await ort.InferenceSession.create(f.modelUrl, {
+              executionProviders: ["wasm"],
+              graphOptimizationLevel: "all"
+            });
+            sessions[f.id] = session;
+            STATE.onnxSessions[f.id] = session;
+            loaded++;
+            if (typeof onProgress === "function") onProgress(loaded, total);
+          }
+          STATE.onnxReady = true;
+          STATE.onnxLoading = null;
+          return sessions;
+        } catch (err) {
+          STATE.onnxLoading = null;
+          throw err;
+        }
+      })();
+      return STATE.onnxLoading;
+    }
+
+    /** Round size up to a multiple of 8 (safer for conv nets) and at least 8. */
+    function alignDim(n) {
+      n = Math.max(8, Math.round(n) | 0);
+      return n % 8 === 0 ? n : n + (8 - (n % 8));
+    }
+
+    /** Preprocess canvas/image to NCHW float32 [0,255] for fast neural style models.
+     *  These ONNX models (candy/mosaic/...) are fixed to exactly 224×224 input.
+     *  Uses letterbox (pad) so the full image is preserved without crop/stretch. */
+    function canvasToOnnxInput(source, targetSize = 224) {
+      const sw = source.width || source.naturalWidth || 0;
+      const sh = source.height || source.naturalHeight || 0;
+      if (!sw || !sh) throw new Error("Invalid image size for style transfer");
+      const ww = targetSize;
+      const hh = targetSize;
+      const c = createCanvas(ww, hh);
+      const ctx = c.getContext("2d", { willReadFrequently: true });
+      // Fill with neutral black padding
+      ctx.fillStyle = "#000";
+      ctx.fillRect(0, 0, ww, hh);
+      // Contain-fit (letterbox) — preserve full content & aspect ratio
+      const scale = Math.min(ww / sw, hh / sh);
+      const dw = sw * scale;
+      const dh = sh * scale;
+      const ox = (ww - dw) / 2;
+      const oy = (hh - dh) / 2;
+      ctx.drawImage(source, ox, oy, dw, dh);
+      const imgData = ctx.getImageData(0, 0, ww, hh);
+      const rgba = imgData.data;
+      const plane = ww * hh;
+      // Fresh tightly-packed buffer — guarantees 4-byte alignment for Float32Array / ORT
+      const float = new Float32Array(3 * plane);
+      for (let i = 0; i < plane; i++) {
+        const o = i * 4;
+        float[i]             = rgba[o];
+        float[plane + i]     = rgba[o + 1];
+        float[2 * plane + i] = rgba[o + 2];
+      }
+      const tensor = new ort.Tensor("float32", float, [1, 3, hh, ww]);
+      return { tensor, width: ww, height: hh, contentBox: { x: ox, y: oy, w: dw, h: dh } };
+    }
+
+    function onnxOutputToCanvas(output, outW, outH, contentBox) {
+      // output: [1, 3, H, W] float32 — always copy out of WASM heap to avoid alignment / byteLength errors
+      const dims = output.dims;
+      const h = dims[2] | 0;
+      const w = dims[3] | 0;
+      const plane = w * h;
+      const src = output.data;
+      // Always create a fresh, tightly-packed Float32Array (avoids "byte length ... multiple of 4")
+      const data = new Float32Array(3 * plane);
+      if (src instanceof Float32Array || ArrayBuffer.isView(src)) {
+        data.set(src.subarray ? src.subarray(0, 3 * plane) : src);
+      } else {
+        for (let i = 0; i < 3 * plane; i++) data[i] = src[i];
+      }
+      const rgba = new Uint8ClampedArray(plane * 4);
+      for (let i = 0; i < plane; i++) {
+        rgba[i * 4]     = Math.max(0, Math.min(255, data[i]));
+        rgba[i * 4 + 1] = Math.max(0, Math.min(255, data[plane + i]));
+        rgba[i * 4 + 2] = Math.max(0, Math.min(255, data[2 * plane + i]));
+        rgba[i * 4 + 3] = 255;
+      }
+      const tmp = createCanvas(w, h);
+      tmp.getContext("2d").putImageData(new ImageData(rgba, w, h), 0, 0);
+      // Crop away letterbox padding so result matches original aspect exactly
+      const box = contentBox || { x: 0, y: 0, w: w, h: h };
+      const cropW = Math.max(1, Math.round(box.w));
+      const cropH = Math.max(1, Math.round(box.h));
+      const cropX = Math.max(0, Math.round(box.x));
+      const cropY = Math.max(0, Math.round(box.y));
+      const out = createCanvas(outW, outH);
+      out.getContext("2d").drawImage(tmp, cropX, cropY, cropW, cropH, 0, 0, outW, outH);
+      return out;
+    }
+
+    // Serialize ONNX session.run calls — WASM sessions are not safely concurrent
+    let _onnxRunQueue = Promise.resolve();
+    function enqueueOnnxRun(fn) {
+      const next = _onnxRunQueue.then(fn, fn);
+      _onnxRunQueue = next.catch(() => {});
+      return next;
+    }
+
+    async function runOnnxStyleTransfer(filter, sourceCanvas) {
+      await ensureOnnxModels();
+      const session = STATE.onnxSessions[filter.id];
+      if (!session) throw new Error("ONNX model not loaded: " + filter.name);
+
+      const sw = sourceCanvas.width;
+      const sh = sourceCanvas.height;
+
+      return enqueueOnnxRun(async () => {
+        // Models are fixed to 224×224 — letterbox to preserve full content & aspect
+        const { tensor, contentBox } = canvasToOnnxInput(sourceCanvas, 224);
+        const inputName = session.inputNames[0];
+        const feeds = { [inputName]: tensor };
+        const results = await session.run(feeds);
+        const outputName = session.outputNames[0];
+        const outTensor = results[outputName];
+        return onnxOutputToCanvas(outTensor, sw, sh, contentBox);
+      });
+    }
+
+    async function prepareStyleTransferCategory() {
+      // Already fully cached — skip any loading UI
+      if (STATE.onnxReady && Object.keys(STATE.onnxSessions || {}).length === ONNX_STYLE_FILTERS.length) {
         setStyleCardsEnabled(true);
-        setStylizingUI(false);
+        return;
+      }
+      // Simple patient message + progress bar (no stage details)
+      setStylizingUI(true, "Loading style engine…", { showHint: true, progress: 8 });
+      setStyleCardsEnabled(false);
+      const errors = [];
+      try {
+        await ensureOnnxModels((loaded, total) => {
+          const p = 10 + Math.round((loaded / Math.max(1, total)) * 85);
+          setStylizingUI(true, "Loading style engine…", { showHint: true, progress: p });
+        });
+        setStylizingUI(true, "Loading style engine…", { showHint: true, progress: 98 });
       } catch (e) {
         console.error(e);
-        setStylizingUI(false);
-        setStyleCardsEnabled(false);
-        toastError(e.message || "Style transfer failed to initialize");
+        errors.push(e.message || "ONNX styles failed");
+      }
+      const anyReady = !!STATE.onnxReady;
+      setStyleCardsEnabled(anyReady);
+      setStylizingUI(false);
+      if (STATE.onnxReady) regenerateThumbs();
+      if (errors.length && !anyReady) {
+        toastError(errors[0]);
+      } else if (errors.length) {
+        toastError(errors[0]);
       }
     }
 
     function setStyleCardsEnabled(on) {
       $$(".filter-card").forEach(card => {
         const f = findFilterById(card.dataset.id);
-        if (f?.type === "styletransfer") {
+        if (f?.type === "styletransfer" || f?.type === "onnxstyle") {
           card.classList.toggle("is-disabled", !on);
           card.disabled = !on;
         }
       });
     }
 
-    function setStylizingUI(on, message) {
+    function setStylizingUI(on, message, opts) {
       const loading = $("#stLoading");
       const wrap = $("#canvasWrap");
       const text = loading?.querySelector(".st-loading-text");
-      if (text && message) text.textContent = message;
-      else if (text && on) text.textContent = "Stylizing…";
+      const hint = loading?.querySelector(".st-loading-hint");
+      const track = loading?.querySelector(".st-progress-track");
+      const bar = $("#stProgressBar");
+      if (text) text.textContent = message || (on ? "Stylizing…" : "");
+      if (hint) {
+        const showHint = !!(on && opts && opts.showHint);
+        hint.hidden = !showHint;
+      }
+      if (track) {
+        const showBar = !!(on && opts && (opts.progress != null || opts.indeterminate));
+        track.hidden = !showBar;
+      }
+      if (bar) {
+        bar.classList.toggle("indeterminate", !!(opts && opts.indeterminate));
+        if (opts && opts.progress != null) {
+          bar.style.width = Math.max(0, Math.min(100, opts.progress)) + "%";
+        } else if (opts && opts.indeterminate) {
+          bar.style.width = "";
+        } else {
+          bar.style.width = "0%";
+        }
+      }
       if (loading) loading.hidden = !on;
       if (wrap) wrap.classList.toggle("is-stylizing", !!on);
     }
@@ -2295,14 +2644,16 @@
       if (!STATE.selectedFilter || !STATE.committedCanvas || !STATE.hasImage) return;
       const filter = STATE.selectedFilter;
       const token = (STATE._previewToken = (STATE._previewToken || 0) + 1);
-      if (filter.type === "styletransfer") {
-        setStylizingUI(true, "Stylizing…");
+      if (filter.type === "styletransfer" || filter.type === "onnxstyle") {
+        setStylizingUI(true, "Stylizing…", { showHint: false, indeterminate: true });
       }
       STATE.isProcessing = true;
       try {
         let result;
         if (filter.type === "styletransfer") {
           result = await runStyleTransfer(filter, STATE.paramValues, STATE.committedCanvas);
+        } else if (filter.type === "onnxstyle") {
+          result = await runOnnxStyleTransfer(filter, STATE.committedCanvas);
         } else {
           result = runFilter(filter, STATE.paramValues, STATE.committedCanvas);
         }
@@ -2325,18 +2676,28 @@
       }
     }
 
-    function commitApply() {
+    async function commitApply() {
       if (!STATE.dirty || !STATE.previewCanvas || !STATE.hasImage) return;
-      pushHistory(STATE.previewCanvas);
-      STATE.previewCanvas = null;
-      STATE.dirty = false;
-      drawDisplay(STATE.committedCanvas);
-      updateStatus();
-      regenerateThumbs();
-      // Deselect filter after apply: keep list scroll position,
-      // clear active card, hide settings, remove handles
-      clearSelection();
-      updateHistoryButtons();
+      const filter = STATE.selectedFilter;
+      if (filter && (filter.type === "styletransfer" || filter.type === "onnxstyle")) {
+        setStylizingUI(true, "Applying…", { showHint: false, indeterminate: true });
+        // Yield so the loading overlay paints before we commit
+        await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+      }
+      try {
+        pushHistory(STATE.previewCanvas);
+        STATE.previewCanvas = null;
+        STATE.dirty = false;
+        drawDisplay(STATE.committedCanvas);
+        updateStatus();
+        regenerateThumbs();
+        // Deselect filter after apply: keep list scroll position,
+        // clear active card, hide settings, remove handles
+        clearSelection();
+        updateHistoryButtons();
+      } finally {
+        setStylizingUI(false);
+      }
     }
 
     function discardPreview() {
@@ -2529,26 +2890,32 @@
       if (STATE.activeCat === "popular") {
         list = POPULAR_IDS.map(id => FILTERS.find(f => f.id === id)).filter(Boolean);
       } else if (STATE.activeCat === "styletransfer") {
-        list = STYLE_FILTERS;
+        // Only original ONNX styles are active; TF-based styles (Mona Lisa, etc.) are disabled
+        list = STYLE_FILTERS.filter(f => f.type === "onnxstyle");
       } else {
         list = FILTERS.filter(f => f.cat === STATE.activeCat);
       }
       $("#filterCount").textContent = list.length;
 
       const styleReady = !!(STATE.styleModel?.styleNet);
+      const onnxReady = !!STATE.onnxReady;
       list.forEach(f => {
         const card = document.createElement("button");
-        card.className = "filter-card" + (f.type === "styletransfer" && !styleReady ? " is-disabled" : "");
+        const needsStyle = f.type === "styletransfer";
+        const needsOnnx = f.type === "onnxstyle";
+        const disabled = (needsStyle && !styleReady) || (needsOnnx && !onnxReady);
+        card.className = "filter-card" + (disabled ? " is-disabled" : "") + (needsStyle || needsOnnx ? " style-transfer" : "");
         card.dataset.id = f.id;
         card.title = f.name;
-        if (f.type === "styletransfer" && !styleReady) card.disabled = true;
+        if (disabled) card.disabled = true;
         card.innerHTML = `<canvas width="${CONFIG.thumbSize}" height="${CONFIG.thumbSize}"></canvas><span>${f.name}</span>`;
         card.addEventListener("click", () => {
           if (!STATE.hasImage) {
             toast("Upload an image first");
             return;
           }
-          if (f.type === "styletransfer" && !STATE.styleModel?.styleNet) return;
+          if (needsStyle && !STATE.styleModel?.styleNet) return;
+          if (needsOnnx && !STATE.onnxReady) return;
           selectFilter(f, card);
         });
         grid.appendChild(card);
@@ -2674,6 +3041,10 @@
       const size = CONFIG.thumbSize;
       const thumbSrc = resizeToThumb(source, size);
       const P = getPixelsJS();
+      // Cache key for ONNX thumb previews (invalidate when committed image changes)
+      const onnxCacheKey = STATE.hasImage && STATE.committedCanvas
+        ? (STATE.historyIndex + "_" + STATE.committedCanvas.width + "x" + STATE.committedCanvas.height)
+        : "sample";
 
       cards.forEach(card => {
         const f = findFilterById(card.dataset.id);
@@ -2695,6 +3066,35 @@
             };
             img.onerror = () => { ctx.fillStyle = "#333"; ctx.fillRect(0,0,size,size); };
             img.src = f.styleUrl;
+          } else if (f.type === "onnxstyle") {
+            card.classList.add("style-transfer");
+            // Placeholder until model runs
+            ctx.drawImage(thumbSrc, 0, 0);
+            if (STATE.onnxReady && STATE.onnxSessions[f.id]) {
+              const cacheId = f.id + "|" + onnxCacheKey;
+              if (STATE.onnxThumbCache[cacheId]) {
+                ctx.drawImage(STATE.onnxThumbCache[cacheId], 0, 0);
+              } else {
+                // Async: apply style to thumb, then paint
+                (async () => {
+                  try {
+                    const styled = await runOnnxStyleTransfer(f, thumbSrc);
+                    const thumb = resizeToThumb(styled, size);
+                    STATE.onnxThumbCache[cacheId] = thumb;
+                    // Card may have been rebuilt
+                    const liveCanvas = card.querySelector("canvas");
+                    if (liveCanvas && card.dataset.id === f.id) {
+                      const liveCtx = liveCanvas.getContext("2d");
+                      liveCanvas.width = size;
+                      liveCanvas.height = size;
+                      liveCtx.drawImage(thumb, 0, 0);
+                    }
+                  } catch (err) {
+                    console.warn("ONNX thumb preview failed", f.id, err);
+                  }
+                })();
+              }
+            }
           } else if (f.type === "pixels" && P) {
             ctx.drawImage(thumbSrc, 0, 0);
             const data = ctx.getImageData(0, 0, size, size);
@@ -2733,6 +3133,7 @@
         STATE.previewCanvas = null;
         STATE.dirty = false;
         STATE.hasImage = true;
+        STATE.onnxThumbCache = {};
         pushHistory(c);
         drawDisplay(STATE.committedCanvas);
         updateStatus();
@@ -2942,8 +3343,16 @@
         }, "image/jpeg", 0.92);
       }
       $("#cameraBtn")?.addEventListener("click", openCamera);
-      $("#emptyCameraBtn")?.addEventListener("click", openCamera);
-      $("#emptyPasteBtn")?.addEventListener("click", pasteFromClipboard);
+      $("#emptyCameraBtn")?.addEventListener("click", e => {
+        e.preventDefault();
+        e.stopPropagation();
+        openCamera();
+      });
+      $("#emptyPasteBtn")?.addEventListener("click", e => {
+        e.preventDefault();
+        e.stopPropagation();
+        pasteFromClipboard();
+      });
       $("#openCreditsBtn")?.addEventListener("click", () => { $("#creditsModal").hidden = false; });
       $("#creditsCloseBtn")?.addEventListener("click", () => { $("#creditsModal").hidden = true; });
       $("#creditsModal")?.addEventListener("click", e => {
@@ -3137,5 +3546,7 @@
 
     boot();
   </script>
-</body>
-</html>
+
+
+
+</body></html>
