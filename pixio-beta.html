@@ -1,0 +1,3548 @@
+<html lang="en" data-theme="dark"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  
+  <link rel="icon" href="/src/Pixio.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/src/Pixio.svg">
+  
+  <title>Pixio — Free Online Photo Filters &amp; Instant Image Editor</title>
+  <meta name="description" content="Free unlimited online photo editor — no signup, no watermarks. Apply cinematic filters, color grading, artistic effects and AI style transfer in your browser. Instant previews, fully free.">
+  <meta name="keywords" content="free photo editor, free photo filters, unlimited, online photo editor free, free image filters, free style transfer, edit photos free online, Pixio">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="Pixio">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="canonical" href="https://smartissa.github.io/pixio/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Pixio — Free Online Photo Filters &amp; Instant Image Editor">
+  <meta property="og:description" content="100% free photo filters and pro edits in one tap. No signup. Upload, preview, download — free forever in your browser.">
+  <meta property="og:url" content="https://smartissa.github.io/pixio.html/">
+  <meta property="og:site_name" content="Pixio">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pixio — Free Unlimitted Online Photo Filters &amp; Instant Image Editor">
+  <meta name="twitter:description" content="100% free photo filters and pro edits. No signup, Unlimitted, no watermarks. Edit online in seconds.">
+
+  <meta property="og:image" content="https://raw.githubusercontent.com/SMARTISSA/SMARTISSA.github.io/refs/heads/main/src/pixio.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Pixio — Free Online Photo Filters">
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/SMARTISSA/SMARTISSA.github.io/refs/heads/main/src/pixio.png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Pixio",
+    "url": "https://smartissa.github.io/pixio.html/",
+    "applicationCategory": "MultimediaApplication",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "Free browser photo editor with cinematic filters, color grading, artistic effects and AI style transfer. No signup required."
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script src="src/Pixels.js"></script>
+  <script src="src/glfx.js"></script>
+  <!-- tf.min.js and ort.min.js loaded on-demand when Style Transfer is first used (keeps initial page load fast ~2MB saved) -->
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --bg-elevated: #141414;
+      --bg-surface: #1a1a1a;
+      --bg-hover: #222;
+      --border: #2a2a2a;
+      --border-strong: #3a3a3a;
+      --text: #f5f5f5;
+      --text-muted: #a0a0a0;
+      --text-dim: #666;
+      --accent: #fff;
+      --accent-inv: #000;
+      --handle: #fff;
+      --handle-border: #000;
+      --radius-sm: 6px;
+      --radius: 10px;
+      --radius-lg: 14px;
+      --shadow: 0 4px 24px rgba(0,0,0,.4);
+      --header-h: 56px;
+      --sidebar-w: 300px;
+      --params-w: 240px;
+      --transition: 160ms ease;
+      --font: "Inter", system-ui, -apple-system, sans-serif;
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 24px;
+      --space-6: 32px;
+      --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+      --scrollbar-size: 8px;
+      --scrollbar-track: var(--bg-elevated);
+      --scrollbar-thumb: var(--border-strong);
+      --scrollbar-thumb-hover: var(--text-dim);
+    }
+    [data-theme="light"] {
+      --bg: #f5f5f5;
+      --bg-elevated: #fff;
+      --bg-surface: #fafafa;
+      --bg-hover: #eee;
+      --border: #e0e0e0;
+      --border-strong: #ccc;
+      --text: #111;
+      --text-muted: #555;
+      --text-dim: #888;
+      --accent: #111;
+      --accent-inv: #fff;
+      --handle: #111;
+      --handle-border: #fff;
+      --shadow: 0 4px 24px rgba(0,0,0,.08);
+      --scrollbar-track: var(--bg-elevated);
+      --scrollbar-thumb: var(--border-strong);
+      --scrollbar-thumb-hover: var(--text-dim);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { height: 100%; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100%;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+    button, input { font: inherit; color: inherit; }
+    button { cursor: pointer; border: none; background: none; }
+    canvas { display: block; }
+    :focus-visible { outline: none; box-shadow: var(--focus-ring); }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+    }
+
+    /* Scrollbar — palette matched */
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    }
+    *::-webkit-scrollbar { width: var(--scrollbar-size); height: var(--scrollbar-size); }
+    *::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+    *::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb);
+      border-radius: 999px;
+      border: 2px solid var(--scrollbar-track);
+    }
+    *::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
+
+    .app {
+      display: grid;
+      grid-template-rows: var(--header-h) 1fr;
+      height: 100vh;
+    }
+    .header {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: var(--space-3);
+      padding: 0 var(--space-4);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-elevated);
+      z-index: 30;
+    }
+    .logo { display: flex; align-items: center; height: 40px; color: var(--text); flex-shrink: 0; }
+    .logo svg { height: 100%; width: auto; max-height: 40px; }
+    .header-actions { display: flex; align-items: center; gap: var(--space-2); flex-shrink: 0; }
+    .header-ad {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: auto;
+      max-height: 40px;
+    }
+    .header-ad .ad-creative {
+      height: auto;
+      max-height: 36px;
+      width: auto;
+      max-width: 100%;
+    }
+    .header-ad .ad-creative img {
+      height: auto;
+      max-height: 36px;
+      width: auto;
+      max-width: 100%;
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      overflow: hidden;
+      height: 100%;
+      min-height: 0;
+    }
+    /* Mobile: full-screen filter drawer + bottom settings sheet under image */
+    @media (max-width: 900px) {
+      html, body {
+        width: 100%;
+        max-width: 100%;
+        height: 100%;
+        height: 100dvh;
+        overflow: hidden;
+        overscroll-behavior: none;
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+      }
+      .app {
+        width: 100%;
+        max-width: 100%;
+        height: 100%;
+        height: 100dvh;
+        grid-template-rows: auto minmax(0, 1fr);
+        overflow: hidden;
+      }
+
+      /* ---- Header: row1 logo+actions, row2 ad below ---- */
+      .header {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        padding: 0;
+        height: auto;
+        gap: 0;
+        grid-template-columns: auto 1fr;
+        grid-template-rows: 44px auto;
+        overflow: hidden;
+        align-items: center;
+      }
+      .logo {
+        grid-column: 1;
+        grid-row: 1;
+        max-width: none;
+        min-width: 0;
+        height: 36px;
+        overflow: hidden;
+        flex-shrink: 1;
+        margin-inline-start: 8px;
+        align-self: center;
+      }
+      .logo svg {
+        height: 36px;
+        width: auto;
+        max-width: min(160px, 42vw);
+        display: block;
+      }
+      .header-actions {
+        grid-column: 2;
+        grid-row: 1;
+        gap: 4px;
+        flex-shrink: 0;
+        max-width: none;
+        overflow: visible;
+        justify-self: end;
+        margin-inline-end: 6px;
+        align-items: center;
+      }
+      .header-actions .btn,
+      .header-actions .btn-icon {
+        height: 32px;
+        min-height: 32px;
+        box-sizing: border-box;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .header-actions .btn {
+        padding: 0 8px;
+        font-size: 0.7rem;
+        white-space: nowrap;
+        line-height: 1;
+      }
+      .header-actions .btn-icon {
+        width: 32px;
+        padding: 0;
+      }
+      #downloadBtn { padding: 0 8px; }
+      /* Ad sits full-width under the header bar */
+      .header-ad {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        min-width: 0 !important;
+        max-width: 100%;
+        overflow: hidden;
+        height: auto;
+        max-height: 36px;
+        padding: 4px 8px;
+        border-top: 1px solid var(--border);
+        justify-content: center;
+        background: var(--bg-elevated);
+      }
+      .header-ad .ad-creative {
+        max-width: 100% !important;
+        width: auto;
+        height: auto;
+        max-height: 28px;
+        box-sizing: border-box;
+        padding: 0;
+      }
+      .header-ad .ad-creative img {
+        max-height: 28px;
+        width: auto;
+        height: auto;
+        max-width: 100%;
+      }
+      .header-ad:empty { display: none; padding: 0; border: none; }
+
+      .main {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(0, 1fr);
+        height: 100%;
+        min-height: 0;
+        overflow: hidden;
+      }
+      .workspace {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        min-height: 0;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        position: relative;
+        z-index: 1;
+      }
+      .canvas-wrap {
+        flex: 1 1 auto;
+        min-height: 0;
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+      }
+
+      /* ---- Footer/toolbar: controls + full-width ad, no horizontal overflow ---- */
+      .toolbar {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 8px;
+        padding-bottom: max(6px, env(safe-area-inset-bottom));
+        overflow: hidden;
+        flex-shrink: 0;
+        border-top: 1px solid var(--border);
+        background: var(--bg-elevated);
+      }
+      .status-bar { display: none !important; }
+      .zoom-label { min-width: 36px; font-size: 0.65rem; flex-shrink: 0; }
+      .handle { width: 28px; height: 28px; }
+      .handle::after { inset: -16px; }
+      .btn-icon { width: 34px; height: 34px; flex-shrink: 0; }
+
+      /* Hide footer/toolbar ads on mobile to free space */
+      .ad-slot--toolbar {
+        display: none !important;
+      }
+
+      /* ---- Drawers host: no cover when closed ---- */
+      .right-panels {
+        position: fixed !important;
+        inset: 0 !important;
+        z-index: 80;
+        border: none !important;
+        background: transparent !important;
+        pointer-events: none !important;
+        display: none !important;
+        width: auto !important;
+        height: auto !important;
+        min-height: 0 !important;
+        overflow: hidden;
+      }
+      body.filters-open .right-panels,
+      body.filters-closing .right-panels,
+      body.params-open .right-panels {
+        display: block !important;
+      }
+      body.filters-open .right-panels {
+        pointer-events: auto !important;
+        background: rgba(0, 0, 0, 0.4) !important;
+      }
+      body.params-open:not(.filters-open) .right-panels {
+        pointer-events: none !important;
+        background: transparent !important;
+      }
+
+      /* Filters drawer — right edge + slide animation */
+      .sidebar {
+        position: absolute !important;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: auto !important;
+        width: min(88vw, 340px) !important;
+        max-width: 100%;
+        height: 100% !important;
+        background: var(--bg-elevated);
+        transform: translateX(100%);
+        pointer-events: none !important;
+        display: none !important;
+        flex-direction: column;
+        z-index: 2;
+        box-shadow: -8px 0 28px rgba(0,0,0,.35);
+        border-left: 1px solid var(--border);
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+      body.filters-open .sidebar,
+      body.filters-closing .sidebar {
+        display: flex !important;
+        pointer-events: auto !important;
+      }
+      body.filters-open .sidebar {
+        animation: pixioDrawerIn 0.32s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+      }
+      body.filters-closing .sidebar {
+        pointer-events: none !important;
+        animation: pixioDrawerOut 0.28s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+      }
+      body.filters-closing .right-panels {
+        display: block !important;
+        pointer-events: none !important;
+        background: rgba(0, 0, 0, 0.4) !important;
+        animation: pixioScrimOut 0.28s ease forwards;
+      }
+      @keyframes pixioDrawerIn {
+        from { transform: translateX(100%); }
+        to { transform: translateX(0); }
+      }
+      @keyframes pixioDrawerOut {
+        from { transform: translateX(0); }
+        to { transform: translateX(100%); }
+      }
+      @keyframes pixioScrimOut {
+        from { background: rgba(0, 0, 0, 0.4); }
+        to { background: rgba(0, 0, 0, 0); }
+      }
+      .sidebar-header {
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 12px;
+        padding-top: max(10px, env(safe-area-inset-top));
+        border-bottom: 1px solid var(--border);
+        flex-shrink: 0;
+        box-sizing: border-box;
+        width: 100%;
+      }
+      .drawer-close {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        color: var(--text);
+        background: var(--bg-hover);
+        font-size: 1.2rem;
+        line-height: 1;
+        flex-shrink: 0;
+      }
+      .cat-nav {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding: 8px 10px;
+        gap: 6px;
+        flex-shrink: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+      .cat-nav::-webkit-scrollbar { display: none; }
+      .cat-btn {
+        flex-shrink: 0;
+        padding: 7px 12px;
+        font-size: 0.72rem;
+        min-height: 34px;
+      }
+      .filter-grid {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        padding: 10px;
+        align-content: start;
+        min-height: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+        -webkit-overflow-scrolling: touch;
+      }
+      .filter-card {
+        width: auto;
+        min-width: 0;
+        padding: 6px;
+        gap: 4px;
+      }
+      .filter-card canvas {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1;
+        max-width: 100%;
+      }
+      .filter-card span {
+        font-size: 0.62rem;
+        max-width: 100%;
+        white-space: normal;
+        text-align: center;
+        overflow: hidden;
+      }
+      .sidebar-footer {
+        padding: 8px 12px;
+        padding-bottom: max(10px, env(safe-area-inset-bottom));
+        border-top: 1px solid var(--border);
+        flex-shrink: 0;
+        background: var(--bg-elevated);
+        box-sizing: border-box;
+        width: 100%;
+      }
+      .apply-btn {
+        padding: 12px;
+        font-size: 0.9rem;
+        min-height: 44px;
+        border-radius: 10px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .credits {
+        display: block !important;
+        font-size: 0.55rem;
+        margin-top: 6px;
+        line-height: 1.35;
+        word-break: break-word;
+      }
+
+      /* Settings sheet from bottom + slide-up animation */
+      .params-panel {
+        position: absolute !important;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100% !important;
+        max-width: 100%;
+        max-height: min(42vh, 300px);
+        border: none !important;
+        border-top: 1px solid var(--border) !important;
+        border-radius: 16px 16px 0 0;
+        background: var(--bg-elevated);
+        box-shadow: 0 -8px 28px rgba(0,0,0,.35);
+        pointer-events: none !important;
+        display: none !important;
+        flex-direction: column;
+        overflow: hidden;
+        z-index: 3;
+        box-sizing: border-box;
+      }
+      body.params-open .params-panel.visible {
+        display: flex !important;
+        pointer-events: auto !important;
+        animation: pixioSheetIn 0.3s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+      }
+      @keyframes pixioSheetIn {
+        from { transform: translateY(100%); }
+        to { transform: translateY(0); }
+      }
+      .params-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+        padding: 16px 12px 8px;
+        font-size: 0.75rem;
+        flex-shrink: 0;
+        position: relative;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+      .params-header::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 7px;
+        width: 36px;
+        height: 4px;
+        margin-left: -18px;
+        border-radius: 999px;
+        background: var(--border-strong);
+      }
+      .params-header-actions {
+        display: flex !important;
+        align-items: center;
+        gap: 4px;
+        flex-shrink: 0;
+      }
+      .params-body {
+        padding: 4px 12px 8px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px 10px;
+        overflow-y: auto;
+        min-height: 0;
+        flex: 1;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+      .param-row { margin-bottom: 0; min-width: 0; }
+      .param-row label { font-size: 0.68rem; margin-bottom: 3px; }
+      .param-hint { grid-column: 1 / -1; font-size: 0.62rem; }
+      .params-footer {
+        display: flex !important;
+        gap: 8px;
+        padding: 8px 12px;
+        padding-bottom: max(8px, env(safe-area-inset-bottom));
+        border-top: 1px solid var(--border);
+        flex-shrink: 0;
+        box-sizing: border-box;
+        width: 100%;
+      }
+      .params-footer .apply-btn { flex: 1; min-height: 42px; padding: 10px; }
+
+      /* Edge tab — does not push layout width */
+      .mobile-filters-btn {
+        display: inline-flex !important;
+        position: fixed;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 90;
+        align-items: center;
+        justify-content: center;
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        letter-spacing: 0.08em;
+        padding: 14px 7px;
+        border-radius: 10px 0 0 10px;
+        background: var(--accent);
+        color: var(--accent-inv);
+        font-weight: 700;
+        font-size: 0.68rem;
+        box-shadow: -3px 0 14px rgba(0,0,0,.28);
+        pointer-events: auto !important;
+        border: 1px solid var(--border);
+        border-right: none;
+        min-height: 88px;
+        max-height: 36vh;
+        box-sizing: border-box;
+      }
+      body.filters-open .mobile-filters-btn,
+      body.filters-closing .mobile-filters-btn,
+      body.params-open .mobile-filters-btn {
+        display: none !important;
+      }
+    }
+
+    .mobile-filters-btn { display: none; }
+    .drawer-close { display: none; }
+    .params-footer { display: none; }
+    .params-header-actions { display: none; }
+
+        @media (max-width: 480px) {
+      .logo { height: 32px; max-width: none; }
+      .logo svg { height: 32px; max-width: min(140px, 40vw); }
+      .header-actions .btn { font-size: 0.65rem; padding: 0 6px; }
+      .header-actions .btn,
+      .header-actions .btn-icon { height: 30px; min-height: 30px; }
+      .header-actions .btn-icon { width: 30px; }
+      #downloadBtn { font-size: 0.65rem; }
+      .filter-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      }
+      .params-body {
+        grid-template-columns: 1fr !important;
+      }
+      /* toolbar ad already hidden on mobile */
+    }
+
+    @media (min-width: 901px) {
+      .mobile-filters-btn { display: none !important; }
+      .drawer-close { display: none !important; }
+      .params-footer { display: none !important; }
+      .params-header-actions { display: none !important; }
+    }
+
+    /* Workspace */
+    .workspace {
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+      overflow: hidden;
+      min-width: 0;
+      min-height: 0;
+    }
+    .canvas-wrap {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+      background: var(--bg);
+      min-height: 0;
+      touch-action: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    .canvas-wrap.has-image { cursor: grab; }
+    .canvas-wrap.has-image.panning { cursor: grabbing; }
+    .canvas-wrap.has-image.has-handles { cursor: default; }
+    .viewport {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform-origin: center center;
+    }
+    .stage {
+      position: relative;
+      box-shadow: var(--shadow);
+      background: repeating-conic-gradient(var(--border) 0% 25%, transparent 0% 50%) 50% / 12px 12px;
+      line-height: 0;
+    }
+    #mainCanvas {
+      max-width: none;
+      max-height: none;
+      border-radius: 2px;
+    }
+    .handles-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .handle {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--handle);
+      border: 2px solid var(--handle-border);
+      box-shadow: 0 1px 6px rgba(0,0,0,.45);
+      transform: translate(-50%, -50%);
+      pointer-events: auto;
+      cursor: grab;
+      z-index: 5;
+      touch-action: none;
+      -webkit-touch-callout: none;
+    }
+    .handle:active { cursor: grabbing; }
+    .handle::after {
+      content: "";
+      position: absolute;
+      inset: -12px;
+      border-radius: 50%;
+    }
+    .handle-label {
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text);
+      background: none;
+      border: none;
+      padding: 0;
+      border-radius: 0;
+      white-space: nowrap;
+      pointer-events: none;
+      /* Shadow contrasts with text so label stays readable on any image */
+      text-shadow:
+        0 0 3px var(--bg),
+        0 1px 2px var(--bg),
+        0 -1px 2px var(--bg),
+        1px 0 2px var(--bg),
+        -1px 0 2px var(--bg),
+        0 0 6px var(--bg);
+    }
+
+    .empty-state {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: center;
+      text-align: center;
+      color: var(--text-muted);
+      pointer-events: none;
+      z-index: 2;
+      padding: var(--space-4);
+      box-sizing: border-box;
+      gap: var(--space-3);
+    }
+    .empty-state[hidden] { display: none !important; }
+    .empty-state .upload-zone {
+      pointer-events: auto;
+      flex: 1 1 auto;
+      width: 100%;
+      min-height: 220px;
+      max-height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-3);
+      box-sizing: border-box;
+      margin: 0;
+      padding: var(--space-5) var(--space-4);
+      text-align: center;
+    }
+    .empty-state .upload-zone h1 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0;
+      flex-shrink: 0;
+    }
+    .empty-state .upload-zone p {
+      font-size: 0.9rem;
+      margin: 0;
+      max-width: 320px;
+      flex-shrink: 0;
+      color: var(--text-muted);
+    }
+    .empty-state .upload-zone > span {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+    .empty-state .empty-actions {
+      flex-shrink: 0;
+      align-self: center;
+      margin-top: var(--space-2);
+      pointer-events: auto;
+    }
+    .empty-state .empty-actions,
+    .empty-state .empty-actions * { pointer-events: auto; }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-4);
+      border-top: 1px solid var(--border);
+      background: var(--bg-elevated);
+      flex-shrink: 0;
+    }
+    .zoom-label {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      min-width: 48px;
+      text-align: center;
+    }
+    .status-bar {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-inline-start: auto;
+    }
+
+    /* Right panels: params (left) + filters (right) so filters stay fixed */
+    .right-panels {
+      display: flex;
+      flex-direction: row;
+      height: 100%;
+      border-left: 1px solid var(--border);
+      background: var(--bg-elevated);
+      min-height: 0;
+    }
+    .params-panel {
+      width: var(--params-w);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border);
+      min-height: 0;
+    }
+    .params-panel.visible { display: flex; }
+    .params-header {
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      flex-shrink: 0;
+    }
+    .params-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--space-3) var(--space-4);
+      min-height: 0;
+    }
+    .param-row { margin-bottom: var(--space-4); }
+    .param-row label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+    }
+    .param-row input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+      height: 4px;
+    }
+    .param-hint {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      margin-top: var(--space-2);
+      line-height: 1.4;
+    }
+
+    .sidebar {
+      width: var(--sidebar-w);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      flex-shrink: 0;
+      min-height: 0;
+      height: 100%;
+    }
+    .sidebar-header {
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .cat-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1);
+      padding: var(--space-2) var(--space-3);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .cat-btn {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      transition: background var(--transition), color var(--transition), border-color var(--transition);
+    }
+    .cat-btn:hover { background: var(--bg-hover); color: var(--text); }
+    .cat-btn.active {
+      background: var(--accent);
+      color: var(--accent-inv);
+      border-color: var(--accent);
+    }
+    .cat-btn.cat-advanced {
+      border-color: #7c5cbf;
+      color: #c4b0f0;
+    }
+    .cat-btn.cat-advanced.active {
+      background: #7c5cbf;
+      color: #fff;
+      border-color: #7c5cbf;
+    }
+    [data-theme="light"] .cat-btn.cat-advanced {
+      border-color: #6b4fad;
+      color: #5a3d9a;
+    }
+    [data-theme="light"] .cat-btn.cat-advanced.active {
+      background: #6b4fad;
+      color: #fff;
+    }
+    .filter-card.style-transfer canvas {
+      object-fit: cover;
+    }
+    .st-loading {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 15;
+      pointer-events: none;
+    }
+    .st-loading:not([hidden]) { display: flex; }
+    .st-loading-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      padding: 20px 28px;
+      border-radius: 12px;
+      background: rgba(0,0,0,.5);
+      max-width: min(360px, 90%);
+      text-align: center;
+    }
+    .st-loading-text {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: 0.02em;
+      text-shadow: 0 1px 8px rgba(0,0,0,.6);
+    }
+    .st-loading-hint {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,.75);
+      line-height: 1.4;
+    }
+    .st-progress-track {
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.18);
+      overflow: hidden;
+    }
+    .st-progress-bar {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: #fff;
+      transition: width 0.35s ease;
+    }
+    .st-progress-bar.indeterminate {
+      width: 40%;
+      animation: st-progress-slide 1.4s ease-in-out infinite;
+    }
+    @keyframes st-progress-slide {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(350%); }
+    }
+    .canvas-wrap.is-stylizing #viewport {
+      opacity: 0.45;
+      transition: opacity 160ms ease;
+    }
+    .canvas-wrap:not(.is-stylizing) #viewport {
+      opacity: 1;
+      transition: opacity 160ms ease;
+    }
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-4);
+    }
+    .modal-backdrop[hidden] { display: none !important; }
+    .modal {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: var(--space-5);
+      max-width: 360px;
+      width: 100%;
+      box-shadow: var(--shadow);
+    }
+    .modal h2 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: var(--space-2);
+    }
+    .modal p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: var(--space-4);
+    }
+    .modal-actions {
+      display: flex;
+      gap: var(--space-2);
+      justify-content: flex-end;
+    }
+    .filter-grid {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--space-3);
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+      gap: var(--space-2);
+      align-content: start;
+      min-height: 0;
+    }
+    .filter-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: var(--space-2);
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      transition: background var(--transition), border-color var(--transition);
+      text-align: center;
+    }
+    .filter-card:hover { background: var(--bg-hover); }
+    .filter-card.active {
+      border-color: var(--accent);
+      background: var(--bg-hover);
+    }
+    .filter-card canvas {
+      width: 68px;
+      height: 68px;
+      border-radius: 4px;
+      background: var(--bg-surface);
+    }
+    .filter-card span {
+      font-size: 0.62rem;
+      color: var(--text-muted);
+      line-height: 1.2;
+      max-width: 76px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .sidebar-footer {
+      padding: var(--space-3);
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+      background: var(--bg-elevated);
+    }
+    .apply-btn {
+      width: 100%;
+      padding: 10px var(--space-3);
+      background: var(--accent);
+      color: var(--accent-inv);
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    .apply-btn:hover:not(:disabled) { opacity: 0.9; }
+    .apply-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .credits {
+      margin-top: var(--space-2);
+      font-size: 0.65rem;
+      line-height: 1.45;
+      color: var(--text-dim);
+      text-align: center;
+    }
+    .credits a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+    .credits a:hover { color: var(--text); text-decoration: underline; }
+    .credits-lead {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .credits-lead img {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--border);
+    }
+    .credits-lead .lead-name {
+      font-weight: 600;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      text-decoration: none;
+    }
+    .credits-lead a.lead-name:hover {
+      color: var(--text);
+      text-decoration: underline;
+    }
+    .credits-team-btn {
+      display: inline;
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--text-muted);
+      text-decoration: underline;
+      cursor: pointer;
+      font: inherit;
+      font-size: inherit;
+    }
+    .credits-team-btn:hover { color: var(--text); }
+    .credits-modal {
+      max-width: 360px;
+    }
+    .credits-modal .lead-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .credits-modal .lead-row + .lead-row {
+      margin-bottom: 16px;
+    }
+    .credits-modal .lead-row img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--border);
+    }
+    .credits-modal .lead-row strong {
+      display: block;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+    .credits-modal .lead-row strong a {
+      color: var(--text);
+      text-decoration: none;
+    }
+    .credits-modal .lead-row strong a:hover {
+      text-decoration: underline;
+    }
+    .credits-modal .lead-row span {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+    .credits-modal ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 12px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+    .credits-modal ul a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+    .credits-modal ul a:hover { color: var(--text); text-decoration: underline; }
+    .credits-modal .modal-actions { justify-content: flex-end; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: background var(--transition), opacity var(--transition);
+      border: 1px solid transparent;
+    }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-primary { background: var(--accent); color: var(--accent-inv); }
+    .btn-primary:hover:not(:disabled) { opacity: 0.9; }
+    .btn-ghost {
+      background: transparent;
+      border-color: var(--border);
+      color: var(--text);
+    }
+    .btn-ghost:hover:not(:disabled) { background: var(--bg-hover); }
+    .btn-icon {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+    .btn-icon:hover:not(:disabled) { background: var(--bg-hover); }
+    .btn-icon:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-icon svg { width: 18px; height: 18px; }
+
+    .upload-zone {
+      border: 2px dashed var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5) var(--space-6);
+      cursor: pointer;
+      transition: border-color var(--transition), background var(--transition);
+      display: inline-block;
+    }
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: var(--accent);
+      background: var(--bg-hover);
+    }
+    .upload-zone input { display: none; }
+    /* Full-area drop target in empty workspace */
+    .empty-state .upload-zone {
+      display: flex;
+      flex-direction: column;
+      padding: var(--space-5) var(--space-4);
+    }
+
+    .toast-container {
+      position: fixed;
+      bottom: var(--space-5);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      pointer-events: none;
+    }
+    .toast {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      font-size: 0.85rem;
+      animation: toastIn 200ms ease;
+    }
+    .toast.toast-error {
+      background: #5c1a1a;
+      border-color: #a33;
+      color: #ffd4d4;
+    }
+    [data-theme="light"] .toast.toast-error {
+      background: #fde8e8;
+      border-color: #f5b5b5;
+      color: #8b1a1a;
+    }
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Ad slots — size follows the ad image (constrained max-height) */
+    .ad-slot {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .ad-creative {
+      display: inline-block;
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      max-height: 40px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      text-decoration: none;
+      line-height: 0;
+      border: 1px solid var(--border);
+      background: transparent;
+      transition: border-color var(--transition), opacity var(--transition);
+      cursor: pointer;
+    }
+    .ad-creative:hover { border-color: var(--border-strong); opacity: 0.92; }
+    .ad-creative img {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 40px;
+      object-fit: contain;
+      object-position: center;
+      pointer-events: none;
+      vertical-align: middle;
+    }
+    .ad-slot:empty { min-height: 0; display: none; }
+    .ad-slot--toolbar {
+      border-top: 1px solid var(--border);
+      background: var(--bg-elevated);
+      padding: 6px var(--space-3);
+      min-height: 0;
+    }
+    .ad-slot--toolbar .ad-creative { max-width: 100%; max-height: 44px; }
+    .ad-slot--toolbar .ad-creative img { max-height: 44px; }
+
+    .empty-actions {
+      display: flex;
+      gap: var(--space-2);
+      margin-top: var(--space-3);
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      flex-wrap: wrap;
+    }
+    .ad-slot--toolbar {
+      margin-inline-start: auto;
+      border: none;
+      background: transparent;
+      padding: 0;
+      min-height: 0;
+      max-width: min(420px, 100%);
+    }
+    .ad-slot--toolbar .ad-creative {
+      max-width: 100%;
+      width: auto;
+    }
+    .filter-card.is-disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .st-loading-text.loading-init { font-size: 1.1rem; }
+
+    .camera-modal { max-width: 420px; }
+    .camera-view {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: #000;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      margin-bottom: var(--space-4);
+    }
+    .camera-view video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .ad-slot--toolbar {
+      margin-inline-start: var(--space-4);
+      flex: 0 1 auto;
+      min-width: 0;
+      max-width: none;
+      height: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ad-slot--toolbar .ad-creative {
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      max-height: 44px;
+      padding: 0;
+    }
+    .ad-slot--toolbar .ad-creative img {
+      max-height: 44px;
+      width: auto;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="logo" aria-label="Pixio">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 80" height="32">
+          <g fill="currentColor">
+            <rect x="18" y="18" width="20" height="20"></rect>
+            <rect x="44" y="18" width="20" height="20"></rect>
+            <rect x="18" y="44" width="20" height="20"></rect>
+            <rect x="44" y="44" width="20" height="20"></rect>
+          </g>
+          <text x="82" y="55" font-family="Arial,Helvetica,sans-serif" font-size="37" font-weight="700" letter-spacing="3" fill="currentColor">Pixio</text>
+        </svg>
+      </div>
+      <div class="header-ad ad-slot" id="adSlotHeader" aria-label="Advertisement"><a class="ad-creative" href="https://smartissa.github.io" target="_blank" rel="noopener noreferrer sponsored" title="Advertisement"><img src="https://raw.githubusercontent.com/SMARTISSA/SMARTISSA.github.io/refs/heads/main/ads/ad1.png" alt="Advertisement" loading="lazy" decoding="async" draggable="false"></a></div>
+      <div class="header-actions">
+        <button class="btn-icon" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">
+          <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+        <button class="btn btn-ghost" id="cameraBtn" title="Take photo">Camera</button>
+        <button class="btn btn-ghost" id="uploadBtn">Upload</button>
+        <input type="file" id="cameraInput" accept="image/*" capture="environment" hidden="">
+        <button class="btn btn-primary" id="downloadBtn" disabled="">Download</button>
+      </div>
+    </header>
+
+    <div class="main">
+      <section class="workspace">
+        <div class="canvas-wrap" id="canvasWrap">
+          <div class="empty-state" id="emptyState">
+            <label class="upload-zone" id="dropZone">
+              <input type="file" id="fileInput" accept="image/*">
+              <h1>Drop a photo. Get a pro look.</h1>
+              <p>One-tap cinematic filters &amp; fine-tuned edits — drop a file or take a photo</p>
+              <span>Drop image here or click to browse</span>
+              <div class="empty-actions">
+                <button type="button" class="btn btn-primary" id="emptyCameraBtn">Take photo</button>
+                <button type="button" class="btn btn-ghost" id="emptyPasteBtn" title="Paste image from clipboard">Paste</button>
+              </div>
+            </label>
+          </div>
+          <div class="viewport" id="viewport">
+            <div class="stage" id="stage" hidden="">
+              <canvas id="mainCanvas"></canvas>
+              <div class="handles-layer" id="handlesLayer"></div>
+            </div>
+          </div>
+          <div class="st-loading" id="stLoading" hidden="">
+            <div class="st-loading-inner">
+              <span class="st-loading-text">Stylizing…</span>
+              <div class="st-progress-track" hidden="">
+                <div class="st-progress-bar" id="stProgressBar"></div>
+              </div>
+              <span class="st-loading-hint" hidden="">Please be patient — first-time loading can take up to 2 minutes.</span>
+            </div>
+          </div>
+        </div>
+        <div class="toolbar">
+          <button class="btn-icon" id="undoBtn" disabled="" title="Undo (Ctrl+Z)" aria-label="Undo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"></path><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6.36 2.64L3 13"></path></svg>
+          </button>
+          <button class="btn-icon" id="redoBtn" disabled="" title="Redo (Ctrl+Y)" aria-label="Redo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"></path><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6.36 2.64L21 13"></path></svg>
+          </button>
+          <button class="btn-icon" id="resetBtn" disabled="" title="Reset" aria-label="Reset">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+          </button>
+          <button class="btn-icon" id="zoomOutBtn" title="Zoom out" aria-label="Zoom out" disabled="">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35M8 11h6"></path></svg>
+          </button>
+          <span class="zoom-label" id="zoomLabel">100%</span>
+          <button class="btn-icon" id="zoomInBtn" title="Zoom in" aria-label="Zoom in" disabled="">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="M21 21l-4.35-4.35M11 8v6M8 11h6"></path></svg>
+          </button>
+          <button class="btn-icon" id="zoomFitBtn" title="Fit" aria-label="Fit to view" disabled="">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+          </button>
+          <div class="ad-slot ad-slot--toolbar" id="adSlotToolbar" aria-label="Advertisement"><a class="ad-creative" href="https://smartissa.github.io" target="_blank" rel="noopener noreferrer sponsored" title="Advertisement"><img src="https://raw.githubusercontent.com/SMARTISSA/SMARTISSA.github.io/refs/heads/main/ads/ad1.png" alt="Advertisement" loading="lazy" decoding="async" draggable="false"></a></div>
+        </div>
+      </section>
+
+      <div class="right-panels">
+        <div class="params-panel" id="paramsPanel">
+          <div class="params-header">
+            <span id="paramsTitle">Settings</span>
+            <div class="params-header-actions">
+              <button type="button" class="btn btn-ghost" id="backToFiltersBtn" style="padding:6px 10px;font-size:0.75rem">Filters</button>
+              <button type="button" class="drawer-close" id="closeParamsBtn" aria-label="Close settings">×</button>
+            </div>
+          </div>
+          <div class="params-body" id="paramsBody"></div>
+          <div class="params-footer">
+            <button class="apply-btn" id="applyBtnMobile" disabled="">Apply</button>
+          </div>
+        </div>
+        <aside class="sidebar">
+          <div class="sidebar-header">
+            <span>Filters <span id="filterCount" style="font-weight:400;color:var(--text-dim);font-size:0.75rem">10</span></span>
+            <button type="button" class="drawer-close" id="closeFiltersBtn" aria-label="Close filters">×</button>
+          </div>
+          <div class="cat-nav" id="catNav" role="tablist"><button class="cat-btn active" data-cat="popular">Popular</button><button class="cat-btn" data-cat="color">Color</button><button class="cat-btn" data-cat="vintage">Vintage</button><button class="cat-btn" data-cat="blur">Blur &amp; Focus</button><button class="cat-btn" data-cat="distort">Distortion</button><button class="cat-btn" data-cat="artistic">Artistic</button><button class="cat-btn" data-cat="noise">Noise &amp; Grain</button><button class="cat-btn" data-cat="structure">Structure</button><button class="cat-btn cat-advanced" data-cat="styletransfer">Style Transfer</button></div>
+          <div class="filter-grid" id="filterGrid" role="listbox" aria-label="Filters"><button class="filter-card" data-id="sat_adj" title="Saturation Boost"><canvas width="68" height="68"></canvas><span>Saturation Boost</span></button><button class="filter-card" data-id="swirl" title="Swirl"><canvas width="68" height="68"></canvas><span>Swirl</span></button><button class="filter-card" data-id="offset" title="RGB Offset"><canvas width="68" height="68"></canvas><span>RGB Offset</span></button><button class="filter-card" data-id="colorHalftone" title="Color Halftone"><canvas width="68" height="68"></canvas><span>Color Halftone</span></button><button class="filter-card" data-id="zoomBlur" title="Radial Blur"><canvas width="68" height="68"></canvas><span>Radial Blur</span></button><button class="filter-card" data-id="denoise" title="Denoise"><canvas width="68" height="68"></canvas><span>Denoise</span></button><button class="filter-card" data-id="unsharpMask" title="Sharpen"><canvas width="68" height="68"></canvas><span>Sharpen</span></button><button class="filter-card" data-id="incbrightness2" title="Brighten Strong"><canvas width="68" height="68"></canvas><span>Brighten Strong</span></button><button class="filter-card" data-id="blues" title="Cool Blue"><canvas width="68" height="68"></canvas><span>Cool Blue</span></button><button class="filter-card" data-id="teal_min_noise" title="Teal Cast"><canvas width="68" height="68"></canvas><span>Teal Cast</span></button></div>
+          <div class="sidebar-footer">
+            <button class="apply-btn" id="applyBtn" disabled="">Apply</button>
+            <div class="credits">
+              <div class="credits-lead">
+                <img src="https://github.com/SMARTISSA.png" alt="SMARTISSA" width="28" height="28" loading="lazy">
+                <a class="lead-name" href="https://smartissa.github.io" target="_blank" rel="noopener">SMARTISSA</a>
+              </div>
+              <button type="button" class="credits-team-btn" id="openCreditsBtn">Collaborators</button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+  <button type="button" class="mobile-filters-btn" id="openFiltersBtn" aria-label="Open filters" title="Swipe / tap for filters">Filters</button>
+  <div class="modal-backdrop" id="resetModal" hidden="" role="dialog" aria-modal="true" aria-labelledby="resetModalTitle">
+    <div class="modal">
+      <h2 id="resetModalTitle">Reset image?</h2>
+      <p>This restores the original upload and clears all applied edits. This cannot be undone from history.</p>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="resetCancelBtn">Cancel</button>
+        <button class="btn btn-primary" id="resetConfirmBtn">Reset</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop" id="cameraModal" hidden="" role="dialog" aria-modal="true" aria-label="Camera">
+    <div class="modal camera-modal">
+      <h2>Take photo</h2>
+      <div class="camera-view">
+        <video id="cameraVideo" autoplay="" playsinline="" muted=""></video>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="cameraCancelBtn">Cancel</button>
+        <button class="btn btn-primary" id="cameraSnapBtn">Capture</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop" id="creditsModal" hidden="" role="dialog" aria-modal="true" aria-labelledby="creditsModalTitle">
+    <div class="modal credits-modal">
+      <h2 id="creditsModalTitle">Collaborators</h2>
+      
+      <div class="lead-row">
+        <img src="https://github.com/SMARTISSA.png" alt="SMARTISSA" width="48" height="48" loading="lazy">
+        <div>
+          <strong><a href="https://smartissa.github.io" target="_blank" rel="noopener">SMARTISSA</a></strong>
+          <span>Company · Project lead</span>
+        </div>
+      </div>
+	<div class="lead-row">
+        <img src="https://github.com/sheyware.png" alt="Pixio" width="48" height="48" loading="lazy">
+        <div>
+          <strong><a href="https://github.com/Sheyware" target="_blank" rel="noopener">Sheyware</a></strong>
+          <span>Project leader</span>
+        </div>
+      </div>
+      <ul>
+        <li>With thanks to <a href="https://x.ai/grok" target="_blank" rel="noopener">Grok</a> (xAI) for implementation assistance</li>
+        <li>Filters: <a href="https://github.com/silvia-odwyer/pixels.js" target="_blank" rel="noopener">Pixels.js</a> — Silvia O'Dwyer</li>
+        <li><a href="https://github.com/evanw/glfx.js" target="_blank" rel="noopener">glfx.js</a> — Evan Wallace</li>
+        <li>Style Transfer: <a href="https://github.com/reiinakano/arbitrary-image-stylization-tfjs" target="_blank" rel="noopener">Arbitrary Style Transfer (TF.js)</a> — Reiichiro Nakano</li>
+        <li>Fast Neural Style (ONNX): <a href="https://github.com/onnx/models/tree/main/validated/vision/style_transfer/fast_neural_style" target="_blank" rel="noopener">ONNX Models</a> — Candy, Mosaic, Rain Princess, Udnie, Pointilism</li>
+        <li>ONNX Runtime Web: <a href="https://onnxruntime.ai/" target="_blank" rel="noopener">Microsoft ONNX Runtime</a></li>
+      </ul>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="creditsCloseBtn">Close</button>
+      </div>
+    </div>
+  </div>
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <script type="module">
+    const tf = window.tf;
+    const CATEGORIES = [
+      { id: "popular", label: "Popular" },
+      { id: "color", label: "Color" },
+      { id: "vintage", label: "Vintage" },
+      { id: "blur", label: "Blur & Focus" },
+      { id: "distort", label: "Distortion" },
+      { id: "artistic", label: "Artistic" },
+      { id: "noise", label: "Noise & Grain" },
+      { id: "structure", label: "Structure" },
+      { id: "styletransfer", label: "Style Transfer", advanced: true }
+    ];
+
+    // Shown first in Popular — order is display order
+    const POPULAR_IDS = [
+      "sat_adj",        // Saturation Boost
+      "swirl",          // Swirl
+      "offset",         // RGB Offset
+      "colorHalftone",  // Color Halftone
+      "zoomBlur",       // Radial Blur
+      "denoise",        // Denoise
+      "unsharpMask",    // Sharpen
+      "incbrightness2", // Brighten Strong
+      "blues",          // Cool Blue
+      "teal_min_noise"  // Teal Cast
+    ];
+
+    // Fast Neural Style (ONNX) — fixed styles; preview = effect on current image
+    // Models from https://github.com/onnx/models (validated/vision/style_transfer/fast_neural_style)
+    const ONNX_STYLE_FILTERS = [
+      {
+        id: "st_onnx_candy",
+        cat: "styletransfer",
+        name: "Candy Glow",
+        modelUrl: "src/models/candy-9.onnx",
+        type: "onnxstyle",
+        params: []
+      },
+      {
+        id: "st_onnx_mosaic",
+        cat: "styletransfer",
+        name: "Mosaic Blast",
+        modelUrl: "src/models/mosaic-9.onnx",
+        type: "onnxstyle",
+        params: []
+      },
+      {
+        id: "st_onnx_rain",
+        cat: "styletransfer",
+        name: "Rainy Muse",
+        modelUrl: "src/models/rain-princess-9.onnx",
+        type: "onnxstyle",
+        params: []
+      },
+      {
+        id: "st_onnx_udnie",
+        cat: "styletransfer",
+        name: "Udnie Wave",
+        modelUrl: "src/models/udnie-9.onnx",
+        type: "onnxstyle",
+        params: []
+      },
+      {
+        id: "st_onnx_pointilism",
+        cat: "styletransfer",
+        name: "Dotty Pop",
+        modelUrl: "src/models/pointilism-9.onnx",
+        type: "onnxstyle",
+        params: []
+      }
+    ];
+
+    // Famous style images (preview = style artwork itself; transfer is expensive)
+    // Each style: name + reference image URL/path only
+    const STYLE_FILTERS = [
+      ...ONNX_STYLE_FILTERS,
+      {
+        id: "st_monalisa",
+        cat: "styletransfer",
+        name: "Mona Lisa",
+        styleUrl: "src/styles/Mona_Lisa.jpg",
+        type: "styletransfer",
+        params: [{ key: "strength", label: "Stylization strength", min: 0, max: 1, step: 0.01, default: 0.85 }]
+      },
+      {
+        id: "st_starry",
+        cat: "styletransfer",
+        name: "Starry Night",
+        styleUrl: "src/styles/VanGogh-starry_night_ballance1.jpg",
+        type: "styletransfer",
+        params: [{ key: "strength", label: "Stylization strength", min: 0, max: 1, step: 0.01, default: 0.85 }]
+      },
+
+
+      {
+        id: "st_cubism",
+        cat: "styletransfer",
+        name: "Cubism",
+        styleUrl: "src/styles/Cubism_and_Mind.png",
+        type: "styletransfer",
+        params: [{ key: "strength", label: "Stylization strength", min: 0, max: 1, step: 0.01, default: 0.85 }]
+      },
+      {
+        id: "st_girl",
+        cat: "styletransfer",
+        name: "Girl with a Pearl Earring",
+        styleUrl: "src/styles/Johannes_Vermeer_%281632-1675%29_-_The_Girl_With_The_Pearl_Earring_%281665%29.jpg",
+        type: "styletransfer",
+        params: [{ key: "strength", label: "Stylization strength", min: 0, max: 1, step: 0.01, default: 0.85 }]
+      },
+      {
+        id: "st_baach",
+        cat: "styletransfer",
+        name: "La danse, Bacchante",
+        styleUrl: "src/styles/Jean_Metzinger%2C_1906%2C_La_dance_%28Bacchante%29%2C_oil_on_canvas%2C_73_x_54_cm_DSC05359...jpg",
+        type: "styletransfer",
+        params: [{ key: "strength", label: "Stylization strength", min: 0, max: 1, step: 0.01, default: 0.85 }]
+      },
+      {
+        id: "st_manford",
+        cat: "styletransfer",
+        name: "Manfred on the Jungfrau",
+        styleUrl: "src/styles/John_Martin_-_Manfred_on_the_Jungfrau_%281837%29.jpg",
+        type: "styletransfer",
+        params: [{ key: "strength", label: "Stylization strength", min: 0, max: 1, step: 0.01, default: 0.85 }]
+      },
+      {
+        id: "st_parade",
+        cat: "styletransfer",
+        name: "Parade de cirque",
+        styleUrl: "src/styles/Circus_Sideshow_%28Parade_de_cirque%29_MET_DP375450_cropped.jpg",
+        type: "styletransfer",
+        params: [{ key: "strength", label: "Stylization strength", min: 0, max: 1, step: 0.01, default: 0.85 }]
+      },
+      {
+        id: "st_pastel",
+        cat: "styletransfer",
+        name: "Pastel",
+        styleUrl: "src/styles/William_Merritt_Chase%2C_Study_of_Flesh_Color_and_Gold%2C_1888%2C_NGA_103252.jpg",
+        type: "styletransfer",
+        params: [{ key: "strength", label: "Stylization strength", min: 0, max: 1, step: 0.01, default: 0.85 }]
+      },
+      {
+        id: "st_patersin",
+        cat: "styletransfer",
+        name: "Holy book",
+        styleUrl: "src/styles/Wga_12c_illuminated_manuscripts_Mary_Magdalen_announcing_the_resurrection.jpg",
+        type: "styletransfer",
+        params: [{ key: "strength", label: "Stylization strength", min: 0, max: 1, step: 0.01, default: 0.85 }]
+      },
+      {
+        id: "st_bov",
+        cat: "styletransfer",
+        name: "The Birth of Venus",
+        styleUrl: "src/styles/Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg/1920px-Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg",
+        type: "styletransfer",
+        params: [{ key: "strength", label: "Stylization strength", min: 0, max: 1, step: 0.01, default: 0.85 }]
+      },
+      {
+        id: "st_gw",
+        cat: "styletransfer",
+        name: "The Great Wave",
+        styleUrl: "src/styles/Great_Wave_off_Kanagawa2.jpg",
+        type: "styletransfer",
+        params: [{ key: "strength", label: "Stylization strength", min: 0, max: 1, step: 0.01, default: 0.85 }]
+      }
+    ];
+
+
+    const FILTERS = [
+      { id: "bc", cat: "color", name: "Brightness & Contrast", type: "glfx", method: "brightnessContrast",
+        params: [
+          { key: "brightness", label: "Brightness", min: -1, max: 1, step: 0.01, default: 0 },
+          { key: "contrast", label: "Contrast", min: -1, max: 1, step: 0.01, default: 0 }
+        ]},
+      { id: "hs", cat: "color", name: "Hue & Saturation", type: "glfx", method: "hueSaturation",
+        params: [
+          { key: "hue", label: "Hue", min: -1, max: 1, step: 0.01, default: 0 },
+          { key: "saturation", label: "Saturation", min: -1, max: 1, step: 0.01, default: 0 }
+        ]},
+      { id: "vibrance", cat: "color", name: "Vibrance", type: "glfx", method: "vibrance",
+        params: [{ key: "amount", label: "Amount", min: -1, max: 1, step: 0.01, default: 0.4 }]},
+      { id: "invert", cat: "color", name: "Invert", type: "pixels", method: "invert" },
+      { id: "sat_adj", cat: "color", name: "Saturation Boost", type: "pixels", method: "sat_adj" },
+      { id: "incbrightness", cat: "color", name: "Brighten", type: "pixels", method: "incbrightness" },
+      { id: "incbrightness2", cat: "color", name: "Brighten Strong", type: "pixels", method: "incbrightness2" },
+      { id: "darkify", cat: "color", name: "Darken", type: "pixels", method: "darkify" },
+      { id: "warmth", cat: "color", name: "Warm Tone", type: "pixels", method: "warmth" },
+      { id: "rosetint", cat: "color", name: "Rose Tint", type: "pixels", method: "rosetint" },
+      { id: "lemon", cat: "color", name: "Lemon Tint", type: "pixels", method: "lemon" },
+      { id: "coral", cat: "color", name: "Coral Tint", type: "pixels", method: "coral" },
+      { id: "crimson", cat: "color", name: "Crimson Tint", type: "pixels", method: "crimson" },
+      { id: "blues", cat: "color", name: "Cool Blue", type: "pixels", method: "blues" },
+      { id: "teal_min_noise", cat: "color", name: "Teal Cast", type: "pixels", method: "teal_min_noise" },
+
+      { id: "greyscale", cat: "vintage", name: "Black & White", type: "pixels", method: "greyscale" },
+      { id: "sepia", cat: "vintage", name: "Sepia", type: "glfx", method: "sepia",
+        params: [{ key: "amount", label: "Intensity", min: 0, max: 1, step: 0.01, default: 0.6 }]},
+      { id: "vintage", cat: "vintage", name: "Faded Film", type: "pixels", method: "vintage" },
+      { id: "twenties", cat: "vintage", name: "1920s", type: "pixels", method: "twenties" },
+      { id: "solange", cat: "vintage", name: "Soft Pastel", type: "pixels", method: "solange" },
+      { id: "solange_dark", cat: "vintage", name: "Moody Pastel", type: "pixels", method: "solange_dark" },
+      { id: "solange_grey", cat: "vintage", name: "Muted Grey", type: "pixels", method: "solange_grey" },
+      { id: "perfume", cat: "vintage", name: "Perfume", type: "pixels", method: "perfume" },
+      { id: "serenity", cat: "vintage", name: "Serenity", type: "pixels", method: "serenity" },
+      { id: "haze", cat: "vintage", name: "Haze", type: "pixels", method: "haze" },
+      { id: "mellow", cat: "vintage", name: "Mellow", type: "pixels", method: "mellow" },
+      { id: "evening", cat: "vintage", name: "Evening", type: "pixels", method: "evening" },
+      { id: "retroviolet", cat: "vintage", name: "Retro Violet", type: "pixels", method: "retroviolet" },
+      { id: "redgreyscale", cat: "vintage", name: "Red Monochrome", type: "pixels", method: "redgreyscale" },
+      { id: "greengreyscale", cat: "vintage", name: "Green Monochrome", type: "pixels", method: "greengreyscale" },
+      { id: "bluescale", cat: "vintage", name: "Blue Monochrome", type: "pixels", method: "bluescale" },
+      { id: "purplescale", cat: "vintage", name: "Purple Monochrome", type: "pixels", method: "purplescale" },
+
+      { id: "triangleBlur", cat: "blur", name: "Soft Blur", type: "glfx", method: "triangleBlur",
+        params: [{ key: "radius", label: "Radius", min: 0, max: 50, step: 0.5, default: 8 }]},
+      { id: "lensBlur", cat: "blur", name: "Lens Blur", type: "glfx", method: "lensBlur",
+        params: [
+          { key: "radius", label: "Radius", min: 0, max: 50, step: 0.5, default: 10 },
+          { key: "brightness", label: "Bokeh Brightness", min: -1, max: 1, step: 0.01, default: 0.2 },
+          { key: "angle", label: "Angle", min: 0, max: 6.28, step: 0.01, default: 0 }
+        ]},
+      { id: "zoomBlur", cat: "blur", name: "Radial Blur", type: "glfx", method: "zoomBlur", handle: "center",
+        params: [
+          { key: "centerX", label: "Center X", min: 0, max: 1, step: 0.01, default: 0.5, hidden: true },
+          { key: "centerY", label: "Center Y", min: 0, max: 1, step: 0.01, default: 0.5, hidden: true },
+          { key: "strength", label: "Strength", min: 0, max: 1, step: 0.01, default: 0.3 }
+        ]},
+      { id: "tiltShift", cat: "blur", name: "Tilt-Shift", type: "glfx", method: "tiltShift", handle: "line",
+        params: [
+          { key: "startX", label: "Start X", min: 0, max: 1, step: 0.01, default: 0, hidden: true },
+          { key: "startY", label: "Start Y", min: 0, max: 1, step: 0.01, default: 0.4, hidden: true },
+          { key: "endX", label: "End X", min: 0, max: 1, step: 0.01, default: 1, hidden: true },
+          { key: "endY", label: "End Y", min: 0, max: 1, step: 0.01, default: 0.6, hidden: true },
+          { key: "blurRadius", label: "Blur Radius", min: 0, max: 50, step: 0.5, default: 15 },
+          { key: "gradientRadius", label: "Falloff", min: 0, max: 400, step: 1, default: 200 }
+        ]},
+      { id: "denoise", cat: "blur", name: "Denoise", type: "glfx", method: "denoise",
+        params: [{ key: "exponent", label: "Strength", min: 1, max: 50, step: 1, default: 15 }]},
+      { id: "unsharpMask", cat: "blur", name: "Sharpen", type: "glfx", method: "unsharpMask",
+        params: [
+          { key: "radius", label: "Radius", min: 0, max: 50, step: 0.5, default: 5 },
+          { key: "strength", label: "Strength", min: 0, max: 5, step: 0.1, default: 1.5 }
+        ]},
+
+      { id: "swirl", cat: "distort", name: "Swirl", type: "glfx", method: "swirl", handle: "center",
+        params: [
+          { key: "centerX", label: "Center X", min: 0, max: 1, step: 0.01, default: 0.5, hidden: true },
+          { key: "centerY", label: "Center Y", min: 0, max: 1, step: 0.01, default: 0.5, hidden: true },
+          { key: "radius", label: "Radius", min: 0, max: 600, step: 1, default: 200 },
+          { key: "angle", label: "Angle", min: -10, max: 10, step: 0.1, default: 3 }
+        ]},
+      { id: "bulgePinch", cat: "distort", name: "Bulge / Pinch", type: "glfx", method: "bulgePinch", handle: "center",
+        params: [
+          { key: "centerX", label: "Center X", min: 0, max: 1, step: 0.01, default: 0.5, hidden: true },
+          { key: "centerY", label: "Center Y", min: 0, max: 1, step: 0.01, default: 0.5, hidden: true },
+          { key: "radius", label: "Radius", min: 0, max: 600, step: 1, default: 150 },
+          { key: "strength", label: "Strength", min: -1, max: 1, step: 0.01, default: 0.5 }
+        ]},
+      { id: "offset", cat: "distort", name: "RGB Offset", type: "pixels", method: "offset" },
+      { id: "offset_blue", cat: "distort", name: "Blue Offset", type: "pixels", method: "offset_blue" },
+      { id: "offset_green", cat: "distort", name: "Green Offset", type: "pixels", method: "offset_green" },
+      { id: "extreme_offset_red", cat: "distort", name: "Strong Red Offset", type: "pixels", method: "extreme_offset_red" },
+      { id: "extreme_offset_blue", cat: "distort", name: "Strong Blue Offset", type: "pixels", method: "extreme_offset_blue" },
+      { id: "extreme_offset_green", cat: "distort", name: "Strong Green Offset", type: "pixels", method: "extreme_offset_green" },
+
+      { id: "ink", cat: "artistic", name: "Ink Outline", type: "glfx", method: "ink",
+        params: [{ key: "strength", label: "Strength", min: 0, max: 1, step: 0.01, default: 0.25 }]},
+      { id: "dotScreen", cat: "artistic", name: "Dot Screen", type: "glfx", method: "dotScreen", handle: "center",
+        params: [
+          { key: "centerX", label: "Center X", min: 0, max: 1, step: 0.01, default: 0.5, hidden: true },
+          { key: "centerY", label: "Center Y", min: 0, max: 1, step: 0.01, default: 0.5, hidden: true },
+          { key: "angle", label: "Angle", min: 0, max: 6.28, step: 0.01, default: 1.1 },
+          { key: "size", label: "Dot Size", min: 1, max: 20, step: 0.5, default: 4 }
+        ]},
+      { id: "colorHalftone", cat: "artistic", name: "Color Halftone", type: "glfx", method: "colorHalftone", handle: "center",
+        params: [
+          { key: "centerX", label: "Center X", min: 0, max: 1, step: 0.01, default: 0.5, hidden: true },
+          { key: "centerY", label: "Center Y", min: 0, max: 1, step: 0.01, default: 0.5, hidden: true },
+          { key: "angle", label: "Angle", min: 0, max: 6.28, step: 0.01, default: 0.5 },
+          { key: "size", label: "Dot Size", min: 1, max: 20, step: 0.5, default: 4 }
+        ]},
+      { id: "hexPixelate", cat: "artistic", name: "Hex Pixelate", type: "glfx", method: "hexagonalPixelate", handle: "center",
+        params: [
+          { key: "centerX", label: "Center X", min: 0, max: 1, step: 0.01, default: 0.5, hidden: true },
+          { key: "centerY", label: "Center Y", min: 0, max: 1, step: 0.01, default: 0.5, hidden: true },
+          { key: "scale", label: "Scale", min: 1, max: 50, step: 0.5, default: 12 }
+        ]},
+      { id: "matrix", cat: "artistic", name: "Matrix", type: "pixels", method: "matrix" },
+      { id: "matrix2", cat: "artistic", name: "Matrix Alt", type: "pixels", method: "matrix2" },
+      { id: "cosmic", cat: "artistic", name: "Cosmic", type: "pixels", method: "cosmic" },
+      { id: "eon", cat: "artistic", name: "Eon", type: "pixels", method: "eon" },
+      { id: "aeon", cat: "artistic", name: "Aeon", type: "pixels", method: "aeon" },
+      { id: "zapt", cat: "artistic", name: "Electric", type: "pixels", method: "zapt" },
+      { id: "radio", cat: "artistic", name: "Radio", type: "pixels", method: "radio" },
+      { id: "pixel_blue", cat: "artistic", name: "Blue Pixel", type: "pixels", method: "pixel_blue" },
+      { id: "casino", cat: "artistic", name: "Casino", type: "pixels", method: "casino" },
+      { id: "yellow_casino", cat: "artistic", name: "Gold Casino", type: "pixels", method: "yellow_casino" },
+      { id: "horizontal_lines", cat: "artistic", name: "Horizontal Lines", type: "pixels", method: "horizontal_lines" },
+      { id: "diagonal_lines", cat: "artistic", name: "Diagonal Lines", type: "pixels", method: "diagonal_lines" },
+      { id: "wood", cat: "artistic", name: "Wood Grain", type: "pixels", method: "wood" },
+      { id: "lix", cat: "artistic", name: "Lix", type: "pixels", method: "lix" },
+      { id: "ryo", cat: "artistic", name: "Ryo", type: "pixels", method: "ryo" },
+      { id: "neue", cat: "artistic", name: "Neue", type: "pixels", method: "neue" },
+      { id: "phase", cat: "artistic", name: "Phase", type: "pixels", method: "phase" },
+      { id: "eclectic", cat: "artistic", name: "Eclectic", type: "pixels", method: "eclectic" },
+      { id: "pane", cat: "artistic", name: "Pane", type: "pixels", method: "pane" },
+      { id: "frontward", cat: "artistic", name: "Frontward", type: "pixels", method: "frontward" },
+      { id: "ocean", cat: "artistic", name: "Ocean", type: "pixels", method: "ocean" },
+      { id: "horizon", cat: "artistic", name: "Horizon", type: "pixels", method: "horizon" },
+      { id: "cool_twilight", cat: "artistic", name: "Twilight", type: "pixels", method: "cool_twilight" },
+      { id: "pink_aura", cat: "artistic", name: "Pink Aura", type: "pixels", method: "pink_aura" },
+      { id: "grime", cat: "artistic", name: "Grime", type: "pixels", method: "grime" },
+      { id: "sunset", cat: "artistic", name: "Sunset", type: "pixels", method: "sunset" },
+
+      { id: "noise", cat: "noise", name: "Film Grain", type: "glfx", method: "noise",
+        params: [{ key: "amount", label: "Amount", min: 0, max: 1, step: 0.01, default: 0.25 }]},
+      { id: "min_noise", cat: "noise", name: "Light Noise", type: "pixels", method: "min_noise" },
+      { id: "red_min_noise", cat: "noise", name: "Red Noise", type: "pixels", method: "red_min_noise" },
+      { id: "pink_min_noise", cat: "noise", name: "Pink Noise", type: "pixels", method: "pink_min_noise" },
+      { id: "green_min_noise", cat: "noise", name: "Green Noise", type: "pixels", method: "green_min_noise" },
+      { id: "blue_min_noise", cat: "noise", name: "Blue Noise", type: "pixels", method: "blue_min_noise" },
+      { id: "purple_min_noise", cat: "noise", name: "Purple Noise", type: "pixels", method: "purple_min_noise" },
+      { id: "dark_purple_min_noise", cat: "noise", name: "Dark Purple Noise", type: "pixels", method: "dark_purple_min_noise" },
+      { id: "green_med_noise", cat: "noise", name: "Medium Green Noise", type: "pixels", method: "green_med_noise" },
+      { id: "specks", cat: "noise", name: "Specks", type: "pixels", method: "specks" },
+      { id: "specks_redscale", cat: "noise", name: "Red Specks", type: "pixels", method: "specks_redscale" },
+      { id: "green_specks", cat: "noise", name: "Green Specks", type: "pixels", method: "green_specks" },
+
+      { id: "edgeWork", cat: "structure", name: "Edge Detect", type: "glfx", method: "edgeWork",
+        params: [{ key: "radius", label: "Radius", min: 0, max: 50, step: 0.5, default: 5 }]},
+      { id: "vignette", cat: "structure", name: "Vignette", type: "glfx", method: "vignette",
+        params: [
+          { key: "size", label: "Size", min: 0, max: 1, step: 0.01, default: 0.5 },
+          { key: "amount", label: "Amount", min: 0, max: 1, step: 0.01, default: 0.5 }
+        ]}
+    ];
+
+    const CONFIG = { thumbSize: 68, maxHistory: 40, minZoom: 0.1, maxZoom: 8 };
+
+    const STATE = {
+      originalImage: null,
+      committedCanvas: null,
+      previewCanvas: null,
+      sampleCanvas: null,
+      history: [],
+      historyIndex: -1,
+      activeCat: "popular",
+      selectedFilter: null,
+      paramValues: {},
+      dirty: false,
+      isProcessing: false,
+      glfxCanvas: null,
+      hasImage: false,
+      zoom: 1,
+      panX: 0,
+      panY: 0,
+      isPanning: false,
+      panStart: null,
+      handles: [],
+      draggingHandle: null,
+      styleModel: null,
+      styleModelLoading: null,
+      styleImages: {},
+      onnxSessions: {},
+      onnxLoading: null,
+      onnxReady: false,
+      onnxThumbCache: {}
+    };
+
+    const $ = (s, c = document) => c.querySelector(s);
+    const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+
+    function toast(msg, ms = 2200, isError = false) {
+      const box = $("#toastContainer");
+      box.innerHTML = "";
+      const el = document.createElement("div");
+      el.className = "toast" + (isError ? " toast-error" : "");
+      el.textContent = msg;
+      box.appendChild(el);
+      setTimeout(() => { if (el.parentNode) el.remove(); }, ms);
+    }
+    function toastError(msg, ms = 3200) {
+      toast(msg, ms, true);
+    }
+
+    function createCanvas(w, h) {
+      const c = document.createElement("canvas");
+      c.width = w; c.height = h;
+      return c;
+    }
+
+    function cloneImageData(d) {
+      return new ImageData(new Uint8ClampedArray(d.data), d.width, d.height);
+    }
+
+    function canvasFromImageData(d) {
+      const c = createCanvas(d.width, d.height);
+      c.getContext("2d").putImageData(d, 0, 0);
+      return c;
+    }
+
+    function imageDataFromCanvas(c) {
+      return c.getContext("2d").getImageData(0, 0, c.width, c.height);
+    }
+
+    function resizeToThumb(source, size) {
+      const c = createCanvas(size, size);
+      const ctx = c.getContext("2d");
+      const scale = Math.max(size / source.width, size / source.height);
+      const w = source.width * scale, h = source.height * scale;
+      ctx.drawImage(source, (size - w) / 2, (size - h) / 2, w, h);
+      return c;
+    }
+
+    function getPixelsJS() {
+      return window.pixelsJS || window.PixelsJS || null;
+    }
+
+    const SAMPLE_IMAGE_URL =
+      "src/sample.png";
+
+    function buildFallbackSampleCanvas() {
+      const w = 200, h = 200;
+      const c = createCanvas(w, h);
+      const ctx = c.getContext("2d");
+      const g = ctx.createLinearGradient(0, 0, 0, h);
+      g.addColorStop(0, "#6b8cae");
+      g.addColorStop(0.55, "#c4a882");
+      g.addColorStop(1, "#3d4a3a");
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, w, h);
+      return c;
+    }
+
+    function loadSampleCanvas() {
+      return new Promise(resolve => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => {
+          const size = 220;
+          const c = createCanvas(size, size);
+          const ctx = c.getContext("2d");
+          const scale = Math.max(size / img.naturalWidth, size / img.naturalHeight);
+          const w = img.naturalWidth * scale;
+          const h = img.naturalHeight * scale;
+          ctx.drawImage(img, (size - w) / 2, (size - h) / 2, w, h);
+          resolve(c);
+        };
+        img.onerror = () => resolve(buildFallbackSampleCanvas());
+        img.src = SAMPLE_IMAGE_URL;
+      });
+    }
+
+    function pushHistory(canvas) {
+      const data = imageDataFromCanvas(canvas);
+      STATE.history = STATE.history.slice(0, STATE.historyIndex + 1);
+      STATE.history.push(cloneImageData(data));
+      if (STATE.history.length > CONFIG.maxHistory) STATE.history.shift();
+      else STATE.historyIndex++;
+      STATE.committedCanvas = canvasFromImageData(STATE.history[STATE.historyIndex]);
+      updateHistoryButtons();
+    }
+
+    function undo() {
+      // Uncommitted filter preview: revert display to last commit and clear selection
+      if (STATE.dirty) {
+        discardPreview();
+        clearSelection();
+        updateHistoryButtons();
+        return;
+      }
+      if (STATE.historyIndex <= 0) return;
+      STATE.historyIndex--;
+      restoreFromHistory();
+    }
+
+    function redo() {
+      if (STATE.historyIndex >= STATE.history.length - 1) return;
+      discardPreview();
+      STATE.historyIndex++;
+      restoreFromHistory();
+    }
+
+    function restoreFromHistory() {
+      const data = STATE.history[STATE.historyIndex];
+      STATE.committedCanvas = canvasFromImageData(data);
+      STATE.previewCanvas = null;
+      STATE.dirty = false;
+      drawDisplay(STATE.committedCanvas);
+      updateHistoryButtons();
+      updateStatus();
+      updateApplyBtn();
+      clearSelection();
+      regenerateThumbs();
+    }
+
+    function updateHistoryButtons() {
+      const hasPast = STATE.historyIndex > 0 || STATE.dirty;
+      const hasFuture = !STATE.dirty && STATE.historyIndex >= 0 && STATE.historyIndex < STATE.history.length - 1;
+      $("#undoBtn").disabled = !hasPast;
+      $("#redoBtn").disabled = !hasFuture;
+      $("#resetBtn").disabled = !STATE.hasImage || STATE.historyIndex <= 0;
+      $("#downloadBtn").disabled = !STATE.hasImage;
+      $("#zoomInBtn").disabled = !STATE.hasImage;
+      $("#zoomOutBtn").disabled = !STATE.hasImage;
+      $("#zoomFitBtn").disabled = !STATE.hasImage;
+    }
+
+    function applyViewportTransform() {
+      const vp = $("#viewport");
+      vp.style.transform = `translate(${STATE.panX}px, ${STATE.panY}px) scale(${STATE.zoom})`;
+      $("#zoomLabel").textContent = Math.round(STATE.zoom * 100) + "%";
+      updateHandlePositions();
+    }
+
+    function setZoom(z, clientX, clientY) {
+      if (!STATE.hasImage) return;
+      const wrap = $("#canvasWrap");
+      const rect = wrap.getBoundingClientRect();
+      const mx = clientX != null ? clientX - rect.left : rect.width / 2;
+      const my = clientY != null ? clientY - rect.top : rect.height / 2;
+      const prev = STATE.zoom;
+      const next = Math.min(CONFIG.maxZoom, Math.max(CONFIG.minZoom, z));
+      // Viewport uses transform-origin: center + translate then scale.
+      // Invert: content coords under cursor, then re-project after scale change
+      // so the same image point stays under the cursor.
+      const cx = rect.width / 2;
+      const cy = rect.height / 2;
+      const contentX = (mx - cx - STATE.panX) / prev;
+      const contentY = (my - cy - STATE.panY) / prev;
+      STATE.zoom = next;
+      STATE.panX = mx - cx - contentX * next;
+      STATE.panY = my - cy - contentY * next;
+      applyViewportTransform();
+    }
+
+    function fitToView() {
+      if (!STATE.committedCanvas) return;
+      const wrap = $("#canvasWrap");
+      const pad = 40;
+      const sx = (wrap.clientWidth - pad) / STATE.committedCanvas.width;
+      const sy = (wrap.clientHeight - pad) / STATE.committedCanvas.height;
+      STATE.zoom = Math.min(1, Math.min(sx, sy));
+      STATE.panX = 0;
+      STATE.panY = 0;
+      applyViewportTransform();
+    }
+
+    function drawDisplay(source) {
+      const main = $("#mainCanvas");
+      main.width = source.width;
+      main.height = source.height;
+      main.getContext("2d").drawImage(source, 0, 0);
+      $("#stage").hidden = false;
+      $("#emptyState").hidden = true;
+      $("#canvasWrap").classList.add("has-image");
+    }
+
+    function showEmptyState() {
+      $("#stage").hidden = true;
+      $("#emptyState").hidden = false;
+      $("#canvasWrap").classList.remove("has-image", "panning", "has-handles");
+      STATE.hasImage = false;
+    }
+
+    function updateStatus() {
+      /* status bar removed */
+    }
+
+    function updateApplyBtn() {
+      const off = !STATE.dirty || !STATE.selectedFilter || !STATE.hasImage;
+      const btn = $("#applyBtn");
+      if (btn) btn.disabled = off;
+      const btnM = $("#applyBtnMobile");
+      if (btnM) btnM.disabled = off;
+    }
+
+    function runFilter(filter, values, sourceCanvas) {
+      if (filter.type === "pixels") {
+        const P = getPixelsJS();
+        if (!P) throw new Error("Pixels.js unavailable");
+        const ctx = sourceCanvas.getContext("2d");
+        const data = ctx.getImageData(0, 0, sourceCanvas.width, sourceCanvas.height);
+        const filtered = P.filterImgData(data, filter.method);
+        const out = createCanvas(sourceCanvas.width, sourceCanvas.height);
+        out.getContext("2d").putImageData(filtered, 0, 0);
+        return out;
+      }
+      if (typeof fx === "undefined") throw new Error("glfx.js unavailable");
+      if (!STATE.glfxCanvas) STATE.glfxCanvas = fx.canvas();
+      const gl = STATE.glfxCanvas;
+      const tex = gl.texture(sourceCanvas);
+      gl.draw(tex);
+      const w = sourceCanvas.width, h = sourceCanvas.height;
+      const v = values || {};
+
+      switch (filter.method) {
+        case "brightnessContrast":
+          gl.brightnessContrast(v.brightness ?? 0, v.contrast ?? 0); break;
+        case "hueSaturation":
+          gl.hueSaturation(v.hue ?? 0, v.saturation ?? 0); break;
+        case "vibrance":
+          gl.vibrance(v.amount ?? 0); break;
+        case "noise":
+          gl.noise(v.amount ?? 0.25); break;
+        case "sepia":
+          gl.sepia(v.amount ?? 0.5); break;
+        case "vignette":
+          gl.vignette(v.size ?? 0.5, v.amount ?? 0.5); break;
+        case "denoise":
+          gl.denoise(v.exponent ?? 15); break;
+        case "unsharpMask":
+          gl.unsharpMask(v.radius ?? 5, v.strength ?? 1); break;
+        case "triangleBlur":
+          gl.triangleBlur(v.radius ?? 5); break;
+        case "zoomBlur":
+          gl.zoomBlur((v.centerX ?? 0.5) * w, (v.centerY ?? 0.5) * h, v.strength ?? 0.3); break;
+        case "tiltShift":
+          gl.tiltShift(
+            (v.startX ?? 0) * w, (v.startY ?? 0.4) * h,
+            (v.endX ?? 1) * w, (v.endY ?? 0.6) * h,
+            v.blurRadius ?? 15, v.gradientRadius ?? 200
+          ); break;
+        case "lensBlur":
+          gl.lensBlur(v.radius ?? 10, v.brightness ?? 0.2, v.angle ?? 0); break;
+        case "swirl":
+          gl.swirl((v.centerX ?? 0.5) * w, (v.centerY ?? 0.5) * h, v.radius ?? 200, v.angle ?? 3); break;
+        case "bulgePinch":
+          gl.bulgePinch((v.centerX ?? 0.5) * w, (v.centerY ?? 0.5) * h, v.radius ?? 150, v.strength ?? 0.5); break;
+        case "ink":
+          gl.ink(v.strength ?? 0.25); break;
+        case "edgeWork":
+          gl.edgeWork(v.radius ?? 5); break;
+        case "hexagonalPixelate":
+          gl.hexagonalPixelate((v.centerX ?? 0.5) * w, (v.centerY ?? 0.5) * h, v.scale ?? 12); break;
+        case "dotScreen":
+          gl.dotScreen((v.centerX ?? 0.5) * w, (v.centerY ?? 0.5) * h, v.angle ?? 1.1, v.size ?? 4); break;
+        case "colorHalftone":
+          gl.colorHalftone((v.centerX ?? 0.5) * w, (v.centerY ?? 0.5) * h, v.angle ?? 0.5, v.size ?? 4); break;
+        default:
+          throw new Error("Unknown method");
+      }
+      gl.update();
+      const out = createCanvas(w, h);
+      out.getContext("2d").drawImage(gl, 0, 0);
+      tex.destroy();
+      return out;
+    }
+
+    function defaultParams(filter) {
+      const o = {};
+      (filter.params || []).forEach(p => { o[p.key] = p.default; });
+      return o;
+    }
+
+
+    function findFilterById(id) {
+      return FILTERS.find(f => f.id === id) || STYLE_FILTERS.find(f => f.id === id);
+    }
+
+    const STYLE_MODEL_URLS = {
+      style: "src/saved_model_style_js.json",
+      transform: "src/saved_model_transformer_separable_js.json"
+    };
+
+    function loadScript(src) {
+      return new Promise((resolve, reject) => {
+        if (document.querySelector(`script[src="${src}"]`)) {
+          // already requested; wait a tick for global to appear
+          const check = () => {
+            if ((src.includes("tf.min") && typeof tf !== "undefined") ||
+                (src.includes("ort.min") && typeof ort !== "undefined")) {
+              resolve();
+            } else {
+              setTimeout(check, 30);
+            }
+          };
+          check();
+          return;
+        }
+        const s = document.createElement("script");
+        s.src = src;
+        s.async = true;
+        s.onload = () => resolve();
+        s.onerror = () => reject(new Error("Failed to load " + src));
+        document.head.appendChild(s);
+      });
+    }
+
+    async function ensureStyleModel() {
+      if (STATE.styleModel?.styleNet && STATE.styleModel?.transformNet) {
+        return STATE.styleModel;
+      }
+      if (STATE.styleModelLoading) return STATE.styleModelLoading;
+      STATE.styleModelLoading = (async () => {
+        try {
+          if (typeof tf === "undefined") {
+            await loadScript("src/tf.min.js");
+          }
+          if (typeof tf === "undefined") {
+            throw new Error("TensorFlow.js failed to load");
+          }
+          // Prefer WebGL for speed
+          await tf.ready();
+          const [styleNet, transformNet] = await Promise.all([
+            tf.loadGraphModel(STYLE_MODEL_URLS.style),
+            tf.loadGraphModel(STYLE_MODEL_URLS.transform)
+          ]);
+          STATE.styleModel = { styleNet, transformNet };
+          STATE.styleModelLoading = null;
+          return STATE.styleModel;
+        } catch (err) {
+          STATE.styleModelLoading = null;
+          throw err;
+        }
+      })();
+      return STATE.styleModelLoading;
+    }
+
+    async function loadStyleImage(url) {
+      if (STATE.styleImages[url]) return STATE.styleImages[url];
+      // Fetch as blob + ImageBitmap / object URL to avoid canvas taint for WebGL
+      try {
+        const res = await fetch(url, { mode: "cors" });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const blob = await res.blob();
+        if (typeof createImageBitmap === "function") {
+          const bmp = await createImageBitmap(blob);
+          STATE.styleImages[url] = bmp;
+          return bmp;
+        }
+        const objUrl = URL.createObjectURL(blob);
+        const img = await new Promise((resolve, reject) => {
+          const el = new Image();
+          el.onload = () => resolve(el);
+          el.onerror = reject;
+          el.src = objUrl;
+        });
+        STATE.styleImages[url] = img;
+        return img;
+      } catch (e) {
+        // Fallback: plain Image (same-origin relative paths)
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => {
+            STATE.styleImages[url] = img;
+            resolve(img);
+          };
+          img.onerror = () => reject(new Error("Failed to load style image: " + url));
+          img.src = url;
+        });
+      }
+    }
+
+    /** Draw any image/canvas into a fresh canvas and return ImageData (avoids WebGL taint). */
+    function toImageData(source, w, h) {
+      const c = createCanvas(w, h);
+      const ctx = c.getContext("2d", { willReadFrequently: true });
+      ctx.drawImage(source, 0, 0, w, h);
+      try {
+        return ctx.getImageData(0, 0, w, h);
+      } catch (err) {
+        // Last resort: pixel copy via temporary export (should not be needed for blob/bitmap sources)
+        throw new Error("Cannot read style/content pixels (canvas tainted). Serve the app over http(s) and keep Styles/ next to index.html.");
+      }
+    }
+
+    async function runStyleTransfer(filter, values, sourceCanvas) {
+      const { styleNet, transformNet } = await ensureStyleModel();
+      const styleImg = await loadStyleImage(filter.styleUrl);
+      const strength = values?.strength ?? 0.85;
+
+      // Keep processing size reasonable; final output matches source dimensions
+      const maxSide = 384;
+      const sw = sourceCanvas.width;
+      const sh = sourceCanvas.height;
+      const scale = Math.min(1, maxSide / Math.max(sw, sh));
+      const workW = Math.max(1, Math.round(sw * scale));
+      const workH = Math.max(1, Math.round(sh * scale));
+
+      // Use ImageData so tf.browser.fromPixels never hits a tainted HTMLCanvas/HTMLImage in WebGL
+      const contentData = toImageData(sourceCanvas, workW, workH);
+      const sNaturalW = styleImg.naturalWidth || styleImg.width || 256;
+      const sNaturalH = styleImg.naturalHeight || styleImg.height || sNaturalW;
+      const styleW = Math.min(256, sNaturalW);
+      const styleH = Math.max(1, Math.round(styleW * (sNaturalH / sNaturalW)));
+      const styleData = toImageData(styleImg, styleW, styleH);
+
+      const stylized = tf.tidy(() => {
+        const styleTensor = tf.browser.fromPixels(styleData).toFloat().div(255).expandDims();
+        let bottleneck = styleNet.predict(styleTensor);
+        if (strength < 1) {
+          const contentTensor = tf.browser.fromPixels(contentData).toFloat().div(255).expandDims();
+          const identityBottleneck = styleNet.predict(contentTensor);
+          bottleneck = bottleneck.mul(tf.scalar(strength)).add(identityBottleneck.mul(tf.scalar(1 - strength)));
+        }
+        const contentIn = tf.browser.fromPixels(contentData).toFloat().div(255).expandDims();
+        return transformNet.predict([contentIn, bottleneck]).squeeze();
+      });
+
+      const tmp = createCanvas(workW, workH);
+      await tf.browser.toPixels(stylized, tmp);
+      stylized.dispose();
+
+      const out = createCanvas(sw, sh);
+      out.getContext("2d").drawImage(tmp, 0, 0, sw, sh);
+      return out;
+    }
+
+    const ONNX_WASM_PATH = "src/";
+
+    function configureOrt() {
+      if (typeof ort === "undefined") return;
+      // All WASM / binary assets load from the same local folder as ort.min.js
+      ort.env.wasm.wasmPaths = ONNX_WASM_PATH;
+      // Single-thread avoids SharedArrayBuffer / alignment issues in many browsers
+      try {
+        ort.env.wasm.numThreads = 1;
+        ort.env.wasm.simd = true;
+      } catch (_) {}
+    }
+
+    async function ensureOnnxModels(onProgress) {
+      if (STATE.onnxReady && Object.keys(STATE.onnxSessions).length === ONNX_STYLE_FILTERS.length) {
+        if (typeof onProgress === "function") onProgress(ONNX_STYLE_FILTERS.length, ONNX_STYLE_FILTERS.length);
+        return STATE.onnxSessions;
+      }
+      if (STATE.onnxLoading) return STATE.onnxLoading;
+      STATE.onnxLoading = (async () => {
+        try {
+          if (typeof ort === "undefined") {
+            await loadScript("src/ort.min.js");
+          }
+          if (typeof ort === "undefined") {
+            throw new Error("ONNX Runtime (ort.min.js) failed to load");
+          }
+          configureOrt();
+          const sessions = {};
+          const total = ONNX_STYLE_FILTERS.length;
+          let loaded = 0;
+          // Load models sequentially to limit peak memory; each is ~6.6 MB
+          for (const f of ONNX_STYLE_FILTERS) {
+            if (STATE.onnxSessions[f.id]) {
+              sessions[f.id] = STATE.onnxSessions[f.id];
+              loaded++;
+              if (typeof onProgress === "function") onProgress(loaded, total);
+              continue;
+            }
+            const session = await ort.InferenceSession.create(f.modelUrl, {
+              executionProviders: ["wasm"],
+              graphOptimizationLevel: "all"
+            });
+            sessions[f.id] = session;
+            STATE.onnxSessions[f.id] = session;
+            loaded++;
+            if (typeof onProgress === "function") onProgress(loaded, total);
+          }
+          STATE.onnxReady = true;
+          STATE.onnxLoading = null;
+          return sessions;
+        } catch (err) {
+          STATE.onnxLoading = null;
+          throw err;
+        }
+      })();
+      return STATE.onnxLoading;
+    }
+
+    /** Round size up to a multiple of 8 (safer for conv nets) and at least 8. */
+    function alignDim(n) {
+      n = Math.max(8, Math.round(n) | 0);
+      return n % 8 === 0 ? n : n + (8 - (n % 8));
+    }
+
+    /** Preprocess canvas/image to NCHW float32 [0,255] for fast neural style models.
+     *  These ONNX models (candy/mosaic/...) are fixed to exactly 224×224 input.
+     *  Uses letterbox (pad) so the full image is preserved without crop/stretch. */
+    function canvasToOnnxInput(source, targetSize = 224) {
+      const sw = source.width || source.naturalWidth || 0;
+      const sh = source.height || source.naturalHeight || 0;
+      if (!sw || !sh) throw new Error("Invalid image size for style transfer");
+      const ww = targetSize;
+      const hh = targetSize;
+      const c = createCanvas(ww, hh);
+      const ctx = c.getContext("2d", { willReadFrequently: true });
+      // Fill with neutral black padding
+      ctx.fillStyle = "#000";
+      ctx.fillRect(0, 0, ww, hh);
+      // Contain-fit (letterbox) — preserve full content & aspect ratio
+      const scale = Math.min(ww / sw, hh / sh);
+      const dw = sw * scale;
+      const dh = sh * scale;
+      const ox = (ww - dw) / 2;
+      const oy = (hh - dh) / 2;
+      ctx.drawImage(source, ox, oy, dw, dh);
+      const imgData = ctx.getImageData(0, 0, ww, hh);
+      const rgba = imgData.data;
+      const plane = ww * hh;
+      // Fresh tightly-packed buffer — guarantees 4-byte alignment for Float32Array / ORT
+      const float = new Float32Array(3 * plane);
+      for (let i = 0; i < plane; i++) {
+        const o = i * 4;
+        float[i]             = rgba[o];
+        float[plane + i]     = rgba[o + 1];
+        float[2 * plane + i] = rgba[o + 2];
+      }
+      const tensor = new ort.Tensor("float32", float, [1, 3, hh, ww]);
+      return { tensor, width: ww, height: hh, contentBox: { x: ox, y: oy, w: dw, h: dh } };
+    }
+
+    function onnxOutputToCanvas(output, outW, outH, contentBox) {
+      // output: [1, 3, H, W] float32 — always copy out of WASM heap to avoid alignment / byteLength errors
+      const dims = output.dims;
+      const h = dims[2] | 0;
+      const w = dims[3] | 0;
+      const plane = w * h;
+      const src = output.data;
+      // Always create a fresh, tightly-packed Float32Array (avoids "byte length ... multiple of 4")
+      const data = new Float32Array(3 * plane);
+      if (src instanceof Float32Array || ArrayBuffer.isView(src)) {
+        data.set(src.subarray ? src.subarray(0, 3 * plane) : src);
+      } else {
+        for (let i = 0; i < 3 * plane; i++) data[i] = src[i];
+      }
+      const rgba = new Uint8ClampedArray(plane * 4);
+      for (let i = 0; i < plane; i++) {
+        rgba[i * 4]     = Math.max(0, Math.min(255, data[i]));
+        rgba[i * 4 + 1] = Math.max(0, Math.min(255, data[plane + i]));
+        rgba[i * 4 + 2] = Math.max(0, Math.min(255, data[2 * plane + i]));
+        rgba[i * 4 + 3] = 255;
+      }
+      const tmp = createCanvas(w, h);
+      tmp.getContext("2d").putImageData(new ImageData(rgba, w, h), 0, 0);
+      // Crop away letterbox padding so result matches original aspect exactly
+      const box = contentBox || { x: 0, y: 0, w: w, h: h };
+      const cropW = Math.max(1, Math.round(box.w));
+      const cropH = Math.max(1, Math.round(box.h));
+      const cropX = Math.max(0, Math.round(box.x));
+      const cropY = Math.max(0, Math.round(box.y));
+      const out = createCanvas(outW, outH);
+      out.getContext("2d").drawImage(tmp, cropX, cropY, cropW, cropH, 0, 0, outW, outH);
+      return out;
+    }
+
+    // Serialize ONNX session.run calls — WASM sessions are not safely concurrent
+    let _onnxRunQueue = Promise.resolve();
+    function enqueueOnnxRun(fn) {
+      const next = _onnxRunQueue.then(fn, fn);
+      _onnxRunQueue = next.catch(() => {});
+      return next;
+    }
+
+    async function runOnnxStyleTransfer(filter, sourceCanvas) {
+      await ensureOnnxModels();
+      const session = STATE.onnxSessions[filter.id];
+      if (!session) throw new Error("ONNX model not loaded: " + filter.name);
+
+      const sw = sourceCanvas.width;
+      const sh = sourceCanvas.height;
+
+      return enqueueOnnxRun(async () => {
+        // Models are fixed to 224×224 — letterbox to preserve full content & aspect
+        const { tensor, contentBox } = canvasToOnnxInput(sourceCanvas, 224);
+        const inputName = session.inputNames[0];
+        const feeds = { [inputName]: tensor };
+        const results = await session.run(feeds);
+        const outputName = session.outputNames[0];
+        const outTensor = results[outputName];
+        return onnxOutputToCanvas(outTensor, sw, sh, contentBox);
+      });
+    }
+
+    async function prepareStyleTransferCategory() {
+      // Show loading with approximate progress while TF + ONNX models initialize
+      setStylizingUI(true, "Loading style engine…", { showHint: true, progress: 5 });
+      setStyleCardsEnabled(false);
+      const errors = [];
+      try {
+        setStylizingUI(true, "Loading TensorFlow engine…", { showHint: true, progress: 15 });
+        await ensureStyleModel();
+        setStylizingUI(true, "TensorFlow ready — loading ONNX…", { showHint: true, progress: 35 });
+      } catch (e) {
+        console.error(e);
+        errors.push(e.message || "Style model failed");
+      }
+      try {
+        setStylizingUI(true, "Downloading style models (this can take a while)…", { showHint: true, progress: 45, indeterminate: false });
+        await ensureOnnxModels((loaded, total) => {
+          // 45% → 95% while models download/create
+          const p = 45 + Math.round((loaded / Math.max(1, total)) * 50);
+          setStylizingUI(true, `Loading style models (${loaded}/${total})…`, { showHint: true, progress: p });
+        });
+        setStylizingUI(true, "Almost ready…", { showHint: true, progress: 98 });
+      } catch (e) {
+        console.error(e);
+        errors.push(e.message || "ONNX styles failed");
+      }
+      const anyReady = !!(STATE.styleModel?.styleNet) || !!STATE.onnxReady;
+      setStyleCardsEnabled(anyReady);
+      setStylizingUI(false);
+      if (STATE.onnxReady) regenerateThumbs();
+      if (errors.length && !anyReady) {
+        toastError(errors[0]);
+      } else if (errors.length) {
+        toastError(errors[0]);
+      }
+    }
+
+    function setStyleCardsEnabled(on) {
+      $$(".filter-card").forEach(card => {
+        const f = findFilterById(card.dataset.id);
+        if (f?.type === "styletransfer" || f?.type === "onnxstyle") {
+          card.classList.toggle("is-disabled", !on);
+          card.disabled = !on;
+        }
+      });
+    }
+
+    function setStylizingUI(on, message, opts) {
+      const loading = $("#stLoading");
+      const wrap = $("#canvasWrap");
+      const text = loading?.querySelector(".st-loading-text");
+      const hint = loading?.querySelector(".st-loading-hint");
+      const track = loading?.querySelector(".st-progress-track");
+      const bar = $("#stProgressBar");
+      if (text) text.textContent = message || (on ? "Stylizing…" : "");
+      if (hint) {
+        const showHint = !!(on && opts && opts.showHint);
+        hint.hidden = !showHint;
+      }
+      if (track) {
+        const showBar = !!(on && opts && (opts.progress != null || opts.indeterminate));
+        track.hidden = !showBar;
+      }
+      if (bar) {
+        bar.classList.toggle("indeterminate", !!(opts && opts.indeterminate));
+        if (opts && opts.progress != null) {
+          bar.style.width = Math.max(0, Math.min(100, opts.progress)) + "%";
+        } else if (opts && opts.indeterminate) {
+          bar.style.width = "";
+        } else {
+          bar.style.width = "0%";
+        }
+      }
+      if (loading) loading.hidden = !on;
+      if (wrap) wrap.classList.toggle("is-stylizing", !!on);
+    }
+
+    async function livePreview() {
+      if (!STATE.selectedFilter || !STATE.committedCanvas || !STATE.hasImage) return;
+      const filter = STATE.selectedFilter;
+      const token = (STATE._previewToken = (STATE._previewToken || 0) + 1);
+      if (filter.type === "styletransfer" || filter.type === "onnxstyle") {
+        setStylizingUI(true, "Stylizing…");
+      }
+      STATE.isProcessing = true;
+      try {
+        let result;
+        if (filter.type === "styletransfer") {
+          result = await runStyleTransfer(filter, STATE.paramValues, STATE.committedCanvas);
+        } else if (filter.type === "onnxstyle") {
+          result = await runOnnxStyleTransfer(filter, STATE.committedCanvas);
+        } else {
+          result = runFilter(filter, STATE.paramValues, STATE.committedCanvas);
+        }
+        // Cancelled / switched away
+        if (token !== STATE._previewToken || STATE.selectedFilter !== filter) return;
+        STATE.previewCanvas = result;
+        STATE.dirty = true;
+        drawDisplay(result);
+        updateStatus();
+        updateApplyBtn();
+        updateHistoryButtons();
+      } catch (e) {
+        console.error(e);
+        if (token === STATE._previewToken) toastError(e.message || "Filter failed");
+      } finally {
+        if (token === STATE._previewToken) {
+          setStylizingUI(false);
+          STATE.isProcessing = false;
+        }
+      }
+    }
+
+    function commitApply() {
+      if (!STATE.dirty || !STATE.previewCanvas || !STATE.hasImage) return;
+      pushHistory(STATE.previewCanvas);
+      STATE.previewCanvas = null;
+      STATE.dirty = false;
+      drawDisplay(STATE.committedCanvas);
+      updateStatus();
+      regenerateThumbs();
+      // Deselect filter after apply: keep list scroll position,
+      // clear active card, hide settings, remove handles
+      clearSelection();
+      updateHistoryButtons();
+    }
+
+    function discardPreview() {
+      if (!STATE.dirty) return;
+      STATE.previewCanvas = null;
+      STATE.dirty = false;
+      if (STATE.committedCanvas) drawDisplay(STATE.committedCanvas);
+      updateStatus();
+      updateApplyBtn();
+      updateHistoryButtons();
+    }
+
+    function clearHandles() {
+      $("#handlesLayer").innerHTML = "";
+      STATE.handles = [];
+      $("#canvasWrap").classList.remove("has-handles");
+    }
+
+    function setupHandles(filter) {
+      clearHandles();
+      if (!filter || !filter.handle || !STATE.hasImage || !STATE.committedCanvas) return;
+      $("#canvasWrap").classList.add("has-handles");
+      const layer = $("#handlesLayer");
+      if (filter.handle === "center") {
+        const hx = createHandle("center", STATE.paramValues.centerX ?? 0.5, STATE.paramValues.centerY ?? 0.5, "Center");
+        layer.appendChild(hx.el);
+        STATE.handles.push(hx);
+      } else if (filter.handle === "line") {
+        const h1 = createHandle("start", STATE.paramValues.startX ?? 0, STATE.paramValues.startY ?? 0.4, "A");
+        const h2 = createHandle("end", STATE.paramValues.endX ?? 1, STATE.paramValues.endY ?? 0.6, "B");
+        layer.appendChild(h1.el);
+        layer.appendChild(h2.el);
+        STATE.handles.push(h1, h2);
+      }
+      updateHandlePositions();
+    }
+
+    function createHandle(id, nx, ny, label) {
+      const el = document.createElement("div");
+      el.className = "handle";
+      el.dataset.id = id;
+      el.innerHTML = `<span class="handle-label">${label}</span>`;
+      el.addEventListener("pointerdown", onHandleDown);
+      return { id, nx, ny, el };
+    }
+
+    function updateHandlePositions() {
+      const canvas = $("#mainCanvas");
+      if (!canvas.width) return;
+      STATE.handles.forEach(h => {
+        h.el.style.left = (h.nx * canvas.width) + "px";
+        h.el.style.top = (h.ny * canvas.height) + "px";
+      });
+    }
+
+    function onHandleDown(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const id = e.currentTarget.dataset.id;
+      STATE.draggingHandle = STATE.handles.find(h => h.id === id);
+      e.currentTarget.setPointerCapture(e.pointerId);
+      e.currentTarget.addEventListener("pointermove", onHandleMove);
+      e.currentTarget.addEventListener("pointerup", onHandleUp);
+      e.currentTarget.addEventListener("pointercancel", onHandleUp);
+    }
+
+    function onHandleMove(e) {
+      if (!STATE.draggingHandle || !STATE.committedCanvas) return;
+      const canvas = $("#mainCanvas");
+      const rect = canvas.getBoundingClientRect();
+      const nx = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+      const ny = Math.min(1, Math.max(0, (e.clientY - rect.top) / rect.height));
+      const h = STATE.draggingHandle;
+      h.nx = nx; h.ny = ny;
+      h.el.style.left = (nx * canvas.width) + "px";
+      h.el.style.top = (ny * canvas.height) + "px";
+      if (h.id === "center") {
+        STATE.paramValues.centerX = nx;
+        STATE.paramValues.centerY = ny;
+      } else if (h.id === "start") {
+        STATE.paramValues.startX = nx;
+        STATE.paramValues.startY = ny;
+      } else if (h.id === "end") {
+        STATE.paramValues.endX = nx;
+        STATE.paramValues.endY = ny;
+      }
+      livePreview();
+    }
+
+    function onHandleUp(e) {
+      const el = e.currentTarget;
+      el.releasePointerCapture(e.pointerId);
+      el.removeEventListener("pointermove", onHandleMove);
+      el.removeEventListener("pointerup", onHandleUp);
+      el.removeEventListener("pointercancel", onHandleUp);
+      STATE.draggingHandle = null;
+    }
+
+    function initParamsForFilter(filter) {
+      STATE.paramValues = defaultParams(filter);
+    }
+
+    function showParams(filter) {
+      const panel = $("#paramsPanel");
+      const body = $("#paramsBody");
+      const visibleParams = (filter.params || []).filter(p => !p.hidden);
+      const hasSettings = visibleParams.length > 0 || !!filter.handle;
+
+      // Desktop: only show params panel when the filter has settings
+      // Mobile: always show (Apply button at minimum)
+      if (!hasSettings && !isMobileLayout()) {
+        panel.classList.remove("visible");
+        body.innerHTML = "";
+        return;
+      }
+
+      $("#paramsTitle").textContent = filter.name;
+      body.innerHTML = "";
+      visibleParams.forEach(p => {
+        const row = document.createElement("div");
+        row.className = "param-row";
+        const val = STATE.paramValues[p.key] ?? p.default;
+        row.innerHTML = `
+          <label><span>${p.label}</span><span class="val">${formatVal(val, p)}</span></label>
+          <input type="range" min="${p.min}" max="${p.max}" step="${p.step}" value="${val}" data-key="${p.key}" />
+        `;
+        const input = row.querySelector("input");
+        const valEl = row.querySelector(".val");
+        input.addEventListener("input", () => {
+          const v = parseFloat(input.value);
+          STATE.paramValues[p.key] = v;
+          valEl.textContent = formatVal(v, p);
+          if (STATE.selectedFilter?.type === "styletransfer") {
+            clearTimeout(STATE._stDebounce);
+            STATE._stDebounce = setTimeout(() => livePreview(), 450);
+          } else {
+            livePreview();
+          }
+        });
+        body.appendChild(row);
+      });
+      if (filter.handle === "center") {
+        const hint = document.createElement("p");
+        hint.className = "param-hint";
+        hint.textContent = "Drag the center point on the image.";
+        body.appendChild(hint);
+      } else if (filter.handle === "line") {
+        const hint = document.createElement("p");
+        hint.className = "param-hint";
+        hint.textContent = "Drag points A and B on the image to set the focus line.";
+        body.appendChild(hint);
+      }
+      panel.classList.add("visible");
+    }
+
+    function formatVal(v, p) {
+      return Number.isInteger(p.step) ? String(v) : Number(v).toFixed(2);
+    }
+
+    function hideParams() {
+      $("#paramsPanel").classList.remove("visible");
+    }
+
+    function buildCatNav() {
+      const nav = $("#catNav");
+      nav.innerHTML = "";
+      CATEGORIES.forEach(c => {
+        const btn = document.createElement("button");
+        btn.className = "cat-btn" + (c.id === STATE.activeCat ? " active" : "") + (c.advanced ? " cat-advanced" : "");
+        btn.textContent = c.label;
+        btn.dataset.cat = c.id;
+        btn.addEventListener("click", async () => {
+          STATE.activeCat = c.id;
+          $$(".cat-btn").forEach(b => b.classList.toggle("active", b.dataset.cat === c.id));
+          if (STATE.dirty) discardPreview();
+          clearSelection();
+          buildFilterGrid();
+          if (c.id === "styletransfer" && STATE.hasImage) {
+            await prepareStyleTransferCategory();
+          }
+        });
+        nav.appendChild(btn);
+      });
+    }
+
+    function buildFilterGrid() {
+      const grid = $("#filterGrid");
+      grid.innerHTML = "";
+      let list;
+      if (STATE.activeCat === "popular") {
+        list = POPULAR_IDS.map(id => FILTERS.find(f => f.id === id)).filter(Boolean);
+      } else if (STATE.activeCat === "styletransfer") {
+        list = STYLE_FILTERS;
+      } else {
+        list = FILTERS.filter(f => f.cat === STATE.activeCat);
+      }
+      $("#filterCount").textContent = list.length;
+
+      const styleReady = !!(STATE.styleModel?.styleNet);
+      const onnxReady = !!STATE.onnxReady;
+      list.forEach(f => {
+        const card = document.createElement("button");
+        const needsStyle = f.type === "styletransfer";
+        const needsOnnx = f.type === "onnxstyle";
+        const disabled = (needsStyle && !styleReady) || (needsOnnx && !onnxReady);
+        card.className = "filter-card" + (disabled ? " is-disabled" : "") + (needsStyle || needsOnnx ? " style-transfer" : "");
+        card.dataset.id = f.id;
+        card.title = f.name;
+        if (disabled) card.disabled = true;
+        card.innerHTML = `<canvas width="${CONFIG.thumbSize}" height="${CONFIG.thumbSize}"></canvas><span>${f.name}</span>`;
+        card.addEventListener("click", () => {
+          if (!STATE.hasImage) {
+            toast("Upload an image first");
+            return;
+          }
+          if (needsStyle && !STATE.styleModel?.styleNet) return;
+          if (needsOnnx && !STATE.onnxReady) return;
+          selectFilter(f, card);
+        });
+        grid.appendChild(card);
+      });
+
+      regenerateThumbs();
+    }
+
+    function clearSelection() {
+      $$(".filter-card").forEach(c => c.classList.remove("active"));
+      STATE.selectedFilter = null;
+      STATE._previewToken = (STATE._previewToken || 0) + 1;
+      setStylizingUI(false);
+      STATE.isProcessing = false;
+      hideParams();
+      clearHandles();
+      updateApplyBtn();
+      if (isMobileLayout()) closeParamsSheet();
+    }
+
+
+    function isMobileLayout() {
+      return window.matchMedia("(max-width: 900px)").matches;
+    }
+    function openFilterDrawer() {
+      document.body.classList.remove("params-open", "filters-closing");
+      document.body.classList.add("filters-open");
+      // Force reflow so slide-in transition runs after display:block
+      const side = document.querySelector(".sidebar");
+      if (side) {
+        side.style.transform = "translateX(100%)";
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            side.style.transform = "";
+          });
+        });
+      }
+    }
+    function closeFilterDrawer() {
+      const side = document.querySelector(".sidebar");
+      if (side && document.body.classList.contains("filters-open") && !document.body.classList.contains("filters-closing")) {
+        let finished = false;
+        const done = (e) => {
+          if (finished) return;
+          if (e && e.target !== side) return;
+          finished = true;
+          document.body.classList.remove("filters-open", "filters-closing");
+          side.style.transform = "";
+          side.removeEventListener("animationend", done);
+        };
+        document.body.classList.add("filters-closing");
+        document.body.classList.remove("filters-open");
+        side.addEventListener("animationend", done);
+        setTimeout(done, 320);
+      } else {
+        document.body.classList.remove("filters-open", "filters-closing");
+      }
+    }
+    function openParamsSheet() {
+      document.body.classList.remove("filters-open");
+      document.body.classList.add("params-open");
+      const panel = document.querySelector(".params-panel");
+      if (panel) {
+        panel.style.transform = "translateY(100%)";
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            panel.style.transform = "";
+          });
+        });
+      }
+    }
+    function closeParamsSheet() {
+      const panel = document.querySelector(".params-panel");
+      if (panel && document.body.classList.contains("params-open")) {
+        let finished = false;
+        const done = () => {
+          if (finished) return;
+          finished = true;
+          document.body.classList.remove("params-open");
+          panel.style.transform = "";
+          panel.removeEventListener("transitionend", done);
+        };
+        panel.style.transform = "translateY(100%)";
+        panel.addEventListener("transitionend", done);
+        setTimeout(done, 340);
+      } else {
+        document.body.classList.remove("params-open");
+      }
+    }
+    function filterHasSettings(filter) {
+      if (!filter) return false;
+      const visible = (filter.params || []).filter(p => !p.hidden);
+      return visible.length > 0 || !!filter.handle;
+    }
+
+    function selectFilter(filter, cardEl) {
+      // Switching filter drops any previous uncommitted settings/preview
+      if (STATE.dirty) discardPreview();
+      $$(".filter-card").forEach(c => c.classList.remove("active"));
+      cardEl.classList.add("active");
+      STATE.selectedFilter = filter;
+      initParamsForFilter(filter);
+      showParams(filter);
+      setupHandles(filter);
+      // Apply filter to main display (thumbs stay based on last commit)
+      livePreview();
+      if (isMobileLayout()) {
+        // Always show settings sheet (Apply at minimum) after picking a filter
+        closeFilterDrawer();
+        openParamsSheet();
+      }
+    }
+
+    function thumbSourceCanvas() {
+      if (STATE.hasImage && STATE.committedCanvas) return STATE.committedCanvas;
+      return STATE.sampleCanvas;
+    }
+
+    function regenerateThumbs() {
+      const source = thumbSourceCanvas();
+      if (!source) return;
+      const cards = $$(".filter-card");
+      const size = CONFIG.thumbSize;
+      const thumbSrc = resizeToThumb(source, size);
+      const P = getPixelsJS();
+      // Cache key for ONNX thumb previews (invalidate when committed image changes)
+      const onnxCacheKey = STATE.hasImage && STATE.committedCanvas
+        ? (STATE.historyIndex + "_" + STATE.committedCanvas.width + "x" + STATE.committedCanvas.height)
+        : "sample";
+
+      cards.forEach(card => {
+        const f = findFilterById(card.dataset.id);
+        if (!f) return;
+        const canvas = card.querySelector("canvas");
+        if (!canvas) return;
+        try {
+          const ctx = canvas.getContext("2d");
+          canvas.width = size;
+          canvas.height = size;
+          if (f.type === "styletransfer") {
+            card.classList.add("style-transfer");
+            const img = new Image();
+            // Local Styles/*.jpg — same origin; do not set crossOrigin
+            img.onload = () => {
+              const sc = Math.max(size / img.naturalWidth, size / img.naturalHeight);
+              const w = img.naturalWidth * sc, h = img.naturalHeight * sc;
+              ctx.drawImage(img, (size - w) / 2, (size - h) / 2, w, h);
+            };
+            img.onerror = () => { ctx.fillStyle = "#333"; ctx.fillRect(0,0,size,size); };
+            img.src = f.styleUrl;
+          } else if (f.type === "onnxstyle") {
+            card.classList.add("style-transfer");
+            // Placeholder until model runs
+            ctx.drawImage(thumbSrc, 0, 0);
+            if (STATE.onnxReady && STATE.onnxSessions[f.id]) {
+              const cacheId = f.id + "|" + onnxCacheKey;
+              if (STATE.onnxThumbCache[cacheId]) {
+                ctx.drawImage(STATE.onnxThumbCache[cacheId], 0, 0);
+              } else {
+                // Async: apply style to thumb, then paint
+                (async () => {
+                  try {
+                    const styled = await runOnnxStyleTransfer(f, thumbSrc);
+                    const thumb = resizeToThumb(styled, size);
+                    STATE.onnxThumbCache[cacheId] = thumb;
+                    // Card may have been rebuilt
+                    const liveCanvas = card.querySelector("canvas");
+                    if (liveCanvas && card.dataset.id === f.id) {
+                      const liveCtx = liveCanvas.getContext("2d");
+                      liveCanvas.width = size;
+                      liveCanvas.height = size;
+                      liveCtx.drawImage(thumb, 0, 0);
+                    }
+                  } catch (err) {
+                    console.warn("ONNX thumb preview failed", f.id, err);
+                  }
+                })();
+              }
+            }
+          } else if (f.type === "pixels" && P) {
+            ctx.drawImage(thumbSrc, 0, 0);
+            const data = ctx.getImageData(0, 0, size, size);
+            const filtered = P.filterImgData(data, f.method);
+            ctx.putImageData(filtered, 0, 0);
+          } else if (f.type === "glfx" && typeof fx !== "undefined") {
+            try {
+              const small = createCanvas(size, size);
+              small.getContext("2d").drawImage(thumbSrc, 0, 0);
+              const result = runFilter(f, defaultParams(f), small);
+              ctx.drawImage(result, 0, 0);
+            } catch {
+              ctx.drawImage(thumbSrc, 0, 0);
+            }
+          } else {
+            ctx.drawImage(thumbSrc, 0, 0);
+          }
+        } catch (_) {}
+      });
+    }
+
+    function loadImage(file) {
+      if (!file || !file.type.startsWith("image/")) {
+        toast("Please select an image file");
+        return;
+      }
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        STATE.originalImage = img;
+        const c = createCanvas(img.naturalWidth, img.naturalHeight);
+        c.getContext("2d").drawImage(img, 0, 0);
+        STATE.history = [];
+        STATE.historyIndex = -1;
+        STATE.previewCanvas = null;
+        STATE.dirty = false;
+        STATE.hasImage = true;
+        STATE.onnxThumbCache = {};
+        pushHistory(c);
+        drawDisplay(STATE.committedCanvas);
+        updateStatus();
+        clearSelection();
+        fitToView();
+        buildFilterGrid();
+      };
+      img.onerror = () => toast("Failed to load image");
+      img.src = url;
+    }
+
+    function resetImage() {
+      if (!STATE.originalImage) return;
+      const img = STATE.originalImage;
+      const c = createCanvas(img.naturalWidth, img.naturalHeight);
+      c.getContext("2d").drawImage(img, 0, 0);
+      STATE.history = [];
+      STATE.historyIndex = -1;
+      STATE.previewCanvas = null;
+      STATE.dirty = false;
+      pushHistory(c);
+      drawDisplay(STATE.committedCanvas);
+      updateStatus();
+      clearSelection();
+      regenerateThumbs();
+      fitToView();
+    }
+
+    function download() {
+      if (!STATE.hasImage) return;
+      // Download exactly what is on screen (preview if uncommitted, else last commit)
+      const source = (STATE.dirty && STATE.previewCanvas) ? STATE.previewCanvas : STATE.committedCanvas;
+      if (!source) return;
+      const link = document.createElement("a");
+      link.download = `pixio-${Date.now()}.png`;
+      link.href = source.toDataURL("image/png");
+      link.click();
+    }
+
+    function initTheme() {
+      const theme = localStorage.getItem("pixio-theme") || "dark";
+      document.documentElement.setAttribute("data-theme", theme);
+      updateThemeIcon(theme);
+    }
+    function toggleTheme() {
+      const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem("pixio-theme", next);
+      updateThemeIcon(next);
+    }
+    function updateThemeIcon(theme) {
+      const icon = $("#themeIcon");
+      icon.innerHTML = theme === "dark"
+        ? '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>'
+        : '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>';
+    }
+
+    async function pasteFromClipboard() {
+      try {
+        if (!navigator.clipboard || !navigator.clipboard.read) {
+          toast("Clipboard paste is not supported in this browser");
+          return;
+        }
+        const items = await navigator.clipboard.read();
+        for (const item of items) {
+          const type = item.types.find(t => t.startsWith("image/"));
+          if (!type) continue;
+          const blob = await item.getType(type);
+          const file = new File([blob], `paste-${Date.now()}.png`, { type: blob.type || "image/png" });
+          loadImage(file);
+          return;
+        }
+        toast("No image found in clipboard");
+      } catch (err) {
+        console.warn("Paste failed", err);
+        toast("Could not read clipboard (permission denied?)");
+      }
+    }
+
+    const ADS_CONFIG_URL = "ads/ads.config";
+
+    function parseAdsConfig(raw) {
+      // Accept slightly non-strict JSON (unquoted keys) from ads.config
+      try {
+        return JSON.parse(raw);
+      } catch (_) {
+        try {
+          const fixed = raw
+            .replace(/([{\[,]\s*)([A-Za-z_][A-Za-z0-9_]*)\s*:/g, '$1"$2":')
+            .replace(/'/g, '"');
+          return JSON.parse(fixed);
+        } catch (e2) {
+          console.warn("Failed to parse ads.config", e2);
+          return [];
+        }
+      }
+    }
+
+    function fillAdSlot(slot, ad) {
+      if (!slot || !ad || !ad.content) return;
+      slot.innerHTML = "";
+      const a = document.createElement("a");
+      a.className = "ad-creative";
+      a.href = ad.target || "#";
+      a.target = "_blank";
+      a.rel = "noopener noreferrer sponsored";
+      a.title = "Advertisement";
+      // Only the image is clickable area — link sizes to the image itself
+      const img = document.createElement("img");
+      img.src = ad.content;
+      img.alt = "Advertisement";
+      img.loading = "lazy";
+      img.decoding = "async";
+      img.draggable = false;
+      img.onerror = () => { slot.innerHTML = ""; };
+      a.appendChild(img);
+      slot.appendChild(a);
+    }
+
+    function pickRandomAd(ads) {
+      return ads[Math.floor(Math.random() * ads.length)];
+    }
+
+    async function loadAds() {
+      try {
+        const res = await fetch(ADS_CONFIG_URL, { cache: "no-store" });
+        if (!res.ok) throw new Error("ads config HTTP " + res.status);
+        const raw = await res.text();
+        const ads = parseAdsConfig(raw);
+        if (!Array.isArray(ads) || !ads.length) return;
+        const slots = [
+          $("#adSlotHeader"),
+          $("#adSlotToolbar")
+        ].filter(Boolean);
+        // Each slot gets a random ad from the config (independent picks)
+        slots.forEach(slot => {
+          fillAdSlot(slot, pickRandomAd(ads));
+        });
+      } catch (err) {
+        console.warn("Ads load failed", err);
+      }
+    }
+
+    function bindEvents() {
+      $("#fileInput").addEventListener("change", e => { if (e.target.files[0]) loadImage(e.target.files[0]); });
+      $("#uploadBtn").addEventListener("click", () => $("#fileInput").click());
+      $("#downloadBtn").addEventListener("click", download);
+      $("#undoBtn").addEventListener("click", undo);
+      $("#redoBtn").addEventListener("click", redo);
+      $("#resetBtn").addEventListener("click", () => {
+        if ($("#resetBtn").disabled) return;
+        $("#resetModal").hidden = false;
+      });
+      $("#resetCancelBtn").addEventListener("click", () => { $("#resetModal").hidden = true; });
+      $("#resetConfirmBtn").addEventListener("click", () => {
+        $("#resetModal").hidden = true;
+        resetImage();
+      });
+      let cameraStream = null;
+      async function openCamera() {
+        const modal = $("#cameraModal");
+        const video = $("#cameraVideo");
+        // Only use file capture when the browser has no camera API at all
+        if (!navigator.mediaDevices?.getUserMedia) {
+          $("#cameraInput").click();
+          return;
+        }
+        try {
+          if (cameraStream) {
+            cameraStream.getTracks().forEach(tr => tr.stop());
+            cameraStream = null;
+          }
+          cameraStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: { ideal: "environment" } },
+            audio: false
+          });
+          video.srcObject = cameraStream;
+          modal.hidden = false;
+          await video.play().catch(() => {});
+        } catch (err) {
+          // User denied permission or closed the prompt — do NOT open file picker
+          console.warn("Camera unavailable or permission denied", err);
+          closeCamera();
+          toast("Camera access was denied or unavailable");
+        }
+      }
+      function closeCamera() {
+        const modal = $("#cameraModal");
+        const video = $("#cameraVideo");
+        modal.hidden = true;
+        if (cameraStream) {
+          cameraStream.getTracks().forEach(tr => tr.stop());
+          cameraStream = null;
+        }
+        if (video) video.srcObject = null;
+      }
+      function snapCamera() {
+        const video = $("#cameraVideo");
+        if (!video || !video.videoWidth) return;
+        const c = createCanvas(video.videoWidth, video.videoHeight);
+        c.getContext("2d").drawImage(video, 0, 0);
+        closeCamera();
+        c.toBlob(blob => {
+          if (!blob) return;
+          const file = new File([blob], `camera-${Date.now()}.jpg`, { type: "image/jpeg" });
+          loadImage(file);
+        }, "image/jpeg", 0.92);
+      }
+      $("#cameraBtn")?.addEventListener("click", openCamera);
+      $("#emptyCameraBtn")?.addEventListener("click", e => {
+        e.preventDefault();
+        e.stopPropagation();
+        openCamera();
+      });
+      $("#emptyPasteBtn")?.addEventListener("click", e => {
+        e.preventDefault();
+        e.stopPropagation();
+        pasteFromClipboard();
+      });
+      $("#openCreditsBtn")?.addEventListener("click", () => { $("#creditsModal").hidden = false; });
+      $("#creditsCloseBtn")?.addEventListener("click", () => { $("#creditsModal").hidden = true; });
+      $("#creditsModal")?.addEventListener("click", e => {
+        if (e.target === $("#creditsModal")) $("#creditsModal").hidden = true;
+      });
+      $("#cameraCancelBtn")?.addEventListener("click", closeCamera);
+      $("#cameraSnapBtn")?.addEventListener("click", snapCamera);
+      $("#cameraInput")?.addEventListener("change", e => { if (e.target.files[0]) loadImage(e.target.files[0]); });
+      $("#themeBtn").addEventListener("click", toggleTheme);
+      $("#applyBtn").addEventListener("click", commitApply);
+      $("#applyBtnMobile")?.addEventListener("click", () => {
+        commitApply();
+        if (isMobileLayout()) closeParamsSheet();
+      });
+      $("#openFiltersBtn")?.addEventListener("click", () => {
+        closeParamsSheet();
+        openFilterDrawer();
+      });
+      // Edge swipe (right side) to open filter drawer on mobile
+      let edgeSwipeStart = null;
+      document.addEventListener("touchstart", e => {
+        if (!isMobileLayout() || document.body.classList.contains("filters-open")) return;
+        const t0 = e.changedTouches[0];
+        if (t0.clientX > window.innerWidth - 28) {
+          edgeSwipeStart = { x: t0.clientX, y: t0.clientY };
+        } else {
+          edgeSwipeStart = null;
+        }
+      }, { passive: true });
+      document.addEventListener("touchend", e => {
+        if (!edgeSwipeStart || !isMobileLayout()) return;
+        const t0 = e.changedTouches[0];
+        const dx = edgeSwipeStart.x - t0.clientX;
+        const dy = Math.abs(t0.clientY - edgeSwipeStart.y);
+        edgeSwipeStart = null;
+        if (dx > 40 && dy < 60) {
+          closeParamsSheet();
+          openFilterDrawer();
+        }
+      }, { passive: true });
+
+      $("#closeFiltersBtn")?.addEventListener("click", closeFilterDrawer);
+      $("#closeParamsBtn")?.addEventListener("click", () => {
+        closeParamsSheet();
+        // Discard unapplied preview when closing settings without apply
+        if (STATE.dirty) discardPreview();
+        clearSelection();
+      });
+      $("#backToFiltersBtn")?.addEventListener("click", () => {
+        closeParamsSheet();
+        openFilterDrawer();
+      });
+      // Tap dimmed backdrop (filters open) closes drawer
+      $(".right-panels")?.addEventListener("click", e => {
+        if (!isMobileLayout()) return;
+        if (e.target.classList.contains("right-panels") && document.body.classList.contains("filters-open")) {
+          closeFilterDrawer();
+        }
+      });
+      $("#zoomInBtn").addEventListener("click", () => setZoom(STATE.zoom * 1.25));
+      $("#zoomOutBtn").addEventListener("click", () => setZoom(STATE.zoom / 1.25));
+      $("#zoomFitBtn").addEventListener("click", fitToView);
+
+      document.addEventListener("keydown", e => {
+        const mod = e.ctrlKey || e.metaKey;
+        if (mod && e.key === "z" && !e.shiftKey) { e.preventDefault(); undo(); }
+        if (mod && (e.key === "y" || (e.shiftKey && e.key === "z"))) { e.preventDefault(); redo(); }
+        if (mod && e.key === "Enter" && STATE.dirty) { e.preventDefault(); commitApply(); }
+      });
+
+      const wrap = $("#canvasWrap");
+      wrap.addEventListener("contextmenu", e => e.preventDefault());
+      wrap.addEventListener("wheel", e => {
+        if (!STATE.hasImage) return;
+        e.preventDefault();
+        const factor = e.deltaY < 0 ? 1.1 : 1 / 1.1;
+        setZoom(STATE.zoom * factor, e.clientX, e.clientY);
+      }, { passive: false });
+
+      // Multi-touch pinch + single-finger pan (mobile-friendly)
+      const activePointers = new Map();
+      let pinchStartDist = 0;
+      let pinchStartZoom = 1;
+      let pinchCenter = { x: 0, y: 0 };
+
+      function pointerDist(a, b) {
+        const dx = a.x - b.x, dy = a.y - b.y;
+        return Math.hypot(dx, dy);
+      }
+      function pointerMid(a, b) {
+        return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+      }
+
+      wrap.addEventListener("pointerdown", e => {
+        if (!STATE.hasImage) return;
+        if (e.target.closest(".handle")) return;
+        if (e.button !== 0 && e.pointerType === "mouse") return;
+        activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        try { wrap.setPointerCapture(e.pointerId); } catch (_) {}
+
+        if (activePointers.size === 1) {
+          STATE.isPanning = true;
+          STATE.panStart = { x: e.clientX - STATE.panX, y: e.clientY - STATE.panY };
+          wrap.classList.add("panning");
+        } else if (activePointers.size === 2) {
+          STATE.isPanning = false;
+          wrap.classList.remove("panning");
+          const pts = [...activePointers.values()];
+          pinchStartDist = pointerDist(pts[0], pts[1]) || 1;
+          pinchStartZoom = STATE.zoom;
+          pinchCenter = pointerMid(pts[0], pts[1]);
+        }
+      });
+      wrap.addEventListener("pointermove", e => {
+        if (!STATE.hasImage || !activePointers.has(e.pointerId)) return;
+        activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+        if (activePointers.size >= 2) {
+          const pts = [...activePointers.values()];
+          const dist = pointerDist(pts[0], pts[1]) || 1;
+          const mid = pointerMid(pts[0], pts[1]);
+          const factor = dist / pinchStartDist;
+          setZoom(pinchStartZoom * factor, mid.x, mid.y);
+          // slight pan follow for pinch center drift
+          const dx = mid.x - pinchCenter.x;
+          const dy = mid.y - pinchCenter.y;
+          if (dx || dy) {
+            STATE.panX += dx;
+            STATE.panY += dy;
+            pinchCenter = mid;
+            applyViewportTransform();
+          }
+          return;
+        }
+        if (STATE.isPanning) {
+          STATE.panX = e.clientX - STATE.panStart.x;
+          STATE.panY = e.clientY - STATE.panStart.y;
+          applyViewportTransform();
+        }
+      });
+      function endPointer(e) {
+        activePointers.delete(e.pointerId);
+        if (activePointers.size < 2) {
+          pinchStartDist = 0;
+        }
+        if (activePointers.size === 0) {
+          STATE.isPanning = false;
+          wrap.classList.remove("panning");
+        } else if (activePointers.size === 1) {
+          // resume pan from remaining finger
+          const remaining = [...activePointers.values()][0];
+          STATE.isPanning = true;
+          STATE.panStart = { x: remaining.x - STATE.panX, y: remaining.y - STATE.panY };
+          wrap.classList.add("panning");
+        }
+        try { wrap.releasePointerCapture(e.pointerId); } catch (_) {}
+      }
+      wrap.addEventListener("pointerup", endPointer);
+      wrap.addEventListener("pointercancel", endPointer);
+
+      const zone = $("#dropZone");
+      ["dragenter", "dragover"].forEach(ev => {
+        wrap.addEventListener(ev, e => {
+          e.preventDefault();
+          if (!STATE.hasImage) zone.classList.add("dragover");
+        });
+      });
+      ["dragleave", "drop"].forEach(ev => {
+        wrap.addEventListener(ev, e => {
+          e.preventDefault();
+          zone.classList.remove("dragover");
+        });
+      });
+      wrap.addEventListener("drop", e => {
+        const file = e.dataTransfer.files[0];
+        if (file) loadImage(file);
+      });
+    }
+
+    async function boot() {
+      document.body.classList.remove("filters-open", "filters-closing", "params-open");
+      initTheme();
+      bindEvents();
+      buildCatNav();
+      updateHistoryButtons();
+      showEmptyState();
+      loadAds();
+      STATE.sampleCanvas = await loadSampleCanvas();
+      buildFilterGrid();
+    }
+
+    boot();
+  </script>
+
+
+
+</body></html>
