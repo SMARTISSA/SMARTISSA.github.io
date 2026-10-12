@@ -2576,15 +2576,15 @@
         return;
       }
       // Simple patient message + progress bar (no stage details)
-      setStylizingUI(true, "Loading style engine…", { showHint: true, progress: 8 });
+      setStylizingUI(true, "Loading…", { showHint: true, progress: 8 });
       setStyleCardsEnabled(false);
       const errors = [];
       try {
         await ensureOnnxModels((loaded, total) => {
           const p = 10 + Math.round((loaded / Math.max(1, total)) * 85);
-          setStylizingUI(true, "Loading style engine…", { showHint: true, progress: p });
+          setStylizingUI(true, "Loading…", { showHint: true, progress: p });
         });
-        setStylizingUI(true, "Loading style engine…", { showHint: true, progress: 98 });
+        setStylizingUI(true, "Loading…", { showHint: true, progress: 98 });
       } catch (e) {
         console.error(e);
         errors.push(e.message || "ONNX styles failed");
