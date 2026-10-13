@@ -1697,36 +1697,54 @@
       {
         id: "st_cartoon_anime",
         cat: "styletransfer",
-        name: "Anime",
-        modelUrl: "src/models/anime.onnx",
-        styleUrl: "src/styles/anime_preview.jpg",
+        name: "Hayao",
+        modelUrl: "src/models/AnimeGANv3_Hayao_36.onnx",
+        styleUrl: "src/styles/AnimeGANv3_Hayao_36.jpg",
         type: "onnxcartoon",
         params: []
       },
       {
         id: "st_cartoon_comic",
         cat: "styletransfer",
-        name: "Comic",
-        modelUrl: "src/models/comic.onnx",
-        styleUrl: "src/styles/comic_preview.jpg",
+        name: "Japanese face",
+        modelUrl: "src/models/AnimeGANv3_JP_face_v1.0.onnx",
+        styleUrl: "src/styles/AnimeGANv3_JP_face_v1.0.jpg",
         type: "onnxcartoon",
         params: []
       },
       {
         id: "st_cartoon_toon",
         cat: "styletransfer",
-        name: "Toon",
-        modelUrl: "src/models/cartoon.onnx",
-        styleUrl: "src/styles/cartoon_preview.jpg",
+        name: "Portrait Sketch",
+        modelUrl: "src/models/AnimeGANv3_PortraitSketch_25.onnx",
+        styleUrl: "src/styles/AnimeGANv3_PortraitSketch_25.jpg",
         type: "onnxcartoon",
         params: []
       },
       {
         id: "st_cartoon_sketch",
         cat: "styletransfer",
-        name: "Sketch",
-        modelUrl: "src/models/sketch.onnx",
-        styleUrl: "src/styles/sketch_preview.jpg",
+        name: "Shinkai",
+        modelUrl: "src/models/AnimeGANv3_Shinkai_37.onnx",
+        styleUrl: "src/styles/AnimeGANv3_Shinkai_37.jpg",
+        type: "onnxcartoon",
+        params: []
+      },
+      {
+        id: "st_cartoon_sketch",
+        cat: "styletransfer",
+        name: "Ghibli",
+        modelUrl: "src/models/AnimeGANv3_large_Ghibli_c1_e299.onnx",
+        styleUrl: "src/styles/AnimeGANv3_large_Ghibli_c1_e299.jpg",
+        type: "onnxcartoon",
+        params: []
+      },
+      {
+        id: "st_cartoon_sketch",
+        cat: "styletransfer",
+        name: "Tiny Cute",
+        modelUrl: "src/models/AnimeGANv3_tiny_Cute.onnx",
+        styleUrl: "src/styles/AnimeGANv3_tiny_Cute.jpg",
         type: "onnxcartoon",
         params: []
       }
@@ -1738,7 +1756,7 @@
         id: "tool_upscale4x",
         cat: "tools",
         name: "Upscale 4×",
-        modelUrl: "src/models/upscale-4x.onnx",
+        modelUrl: "src/models/4x-Upscale-ClearRealityV1-fp32-opset17.onnx",
         type: "onnxupscale",
         scale: 4,
         params: []
