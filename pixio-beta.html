@@ -965,6 +965,23 @@
       background: #6b4fad;
       color: #fff;
     }
+    .cat-btn.cat-tools {
+      border-color: #0d9488;
+      color: #5eead4;
+    }
+    .cat-btn.cat-tools.active {
+      background: #0d9488;
+      color: #fff;
+      border-color: #0d9488;
+    }
+    [data-theme="light"] .cat-btn.cat-tools {
+      border-color: #0f766e;
+      color: #0f766e;
+    }
+    [data-theme="light"] .cat-btn.cat-tools.active {
+      background: #0f766e;
+      color: #fff;
+    }
     .filter-card.style-transfer canvas {
       object-fit: cover;
     }
@@ -1525,7 +1542,7 @@
             <span>Filters <span id="filterCount" style="font-weight:400;color:var(--text-dim);font-size:0.75rem">10</span></span>
             <button type="button" class="drawer-close" id="closeFiltersBtn" aria-label="Close filters">×</button>
           </div>
-          <div class="cat-nav" id="catNav" role="tablist"><button class="cat-btn active" data-cat="popular">Popular</button><button class="cat-btn" data-cat="color">Color</button><button class="cat-btn" data-cat="vintage">Vintage</button><button class="cat-btn" data-cat="blur">Blur &amp; Focus</button><button class="cat-btn" data-cat="distort">Distortion</button><button class="cat-btn" data-cat="artistic">Artistic</button><button class="cat-btn" data-cat="noise">Noise &amp; Grain</button><button class="cat-btn" data-cat="structure">Structure</button><button class="cat-btn cat-advanced" data-cat="styletransfer">Style Transfer</button></div>
+          <div class="cat-nav" id="catNav" role="tablist"><button class="cat-btn active" data-cat="popular">Popular</button><button class="cat-btn" data-cat="color">Color</button><button class="cat-btn" data-cat="vintage">Vintage</button><button class="cat-btn" data-cat="blur">Blur &amp; Focus</button><button class="cat-btn" data-cat="distort">Distortion</button><button class="cat-btn" data-cat="artistic">Artistic</button><button class="cat-btn" data-cat="noise">Noise &amp; Grain</button><button class="cat-btn" data-cat="structure">Structure</button><button class="cat-btn cat-advanced" data-cat="styletransfer">Style Transfer</button><button class="cat-btn cat-tools" data-cat="tools">Tools</button></div>
           <div class="filter-grid" id="filterGrid" role="listbox" aria-label="Filters"><button class="filter-card" data-id="sat_adj" title="Saturation Boost"><canvas width="68" height="68"></canvas><span>Saturation Boost</span></button><button class="filter-card" data-id="swirl" title="Swirl"><canvas width="68" height="68"></canvas><span>Swirl</span></button><button class="filter-card" data-id="offset" title="RGB Offset"><canvas width="68" height="68"></canvas><span>RGB Offset</span></button><button class="filter-card" data-id="colorHalftone" title="Color Halftone"><canvas width="68" height="68"></canvas><span>Color Halftone</span></button><button class="filter-card" data-id="zoomBlur" title="Radial Blur"><canvas width="68" height="68"></canvas><span>Radial Blur</span></button><button class="filter-card" data-id="denoise" title="Denoise"><canvas width="68" height="68"></canvas><span>Denoise</span></button><button class="filter-card" data-id="unsharpMask" title="Sharpen"><canvas width="68" height="68"></canvas><span>Sharpen</span></button><button class="filter-card" data-id="incbrightness2" title="Brighten Strong"><canvas width="68" height="68"></canvas><span>Brighten Strong</span></button><button class="filter-card" data-id="blues" title="Cool Blue"><canvas width="68" height="68"></canvas><span>Cool Blue</span></button><button class="filter-card" data-id="teal_min_noise" title="Teal Cast"><canvas width="68" height="68"></canvas><span>Teal Cast</span></button></div>
           <div class="sidebar-footer">
             <button class="apply-btn" id="applyBtn" disabled="">Apply</button>
@@ -1606,7 +1623,8 @@
       { id: "artistic", label: "Artistic" },
       { id: "noise", label: "Noise & Grain" },
       { id: "structure", label: "Structure" },
-      { id: "styletransfer", label: "Style Transfer", advanced: true }
+      { id: "styletransfer", label: "Style Transfer", advanced: true },
+      { id: "tools", label: "Tools", tools: true }
     ];
 
     // Shown first in Popular — order is display order
@@ -1623,7 +1641,7 @@
       "teal_min_noise"  // Teal Cast
     ];
 
-    // Fast Neural Style (ONNX) — fixed styles; preview = effect on current image
+    // Fast Neural Style (ONNX) — fixed styles; preview = ready-made style artwork (not applied on input)
     // Models from https://github.com/onnx/models (validated/vision/style_transfer/fast_neural_style)
     const ONNX_STYLE_FILTERS = [
       {
@@ -1631,6 +1649,7 @@
         cat: "styletransfer",
         name: "Candy Glow",
         modelUrl: "src/models/candy-9.onnx",
+        styleUrl: "src/styles/candy.jpg",
         type: "onnxstyle",
         params: []
       },
@@ -1639,6 +1658,7 @@
         cat: "styletransfer",
         name: "Mosaic Blast",
         modelUrl: "src/models/mosaic-9.onnx",
+        styleUrl: "src/styles/mosaic.jpg",
         type: "onnxstyle",
         params: []
       },
@@ -1647,6 +1667,7 @@
         cat: "styletransfer",
         name: "Rainy Muse",
         modelUrl: "src/models/rain-princess-9.onnx",
+        styleUrl: "src/styles/rain-princess.jpg",
         type: "onnxstyle",
         params: []
       },
@@ -1655,6 +1676,7 @@
         cat: "styletransfer",
         name: "Udnie Wave",
         modelUrl: "src/models/udnie-9.onnx",
+        styleUrl: "src/styles/udnie.jpg",
         type: "onnxstyle",
         params: []
       },
@@ -1663,7 +1685,62 @@
         cat: "styletransfer",
         name: "Dotty Pop",
         modelUrl: "src/models/pointilism-9.onnx",
+        styleUrl: "src/styles/pointilism.jpg",
         type: "onnxstyle",
+        params: []
+      }
+    ];
+
+    // Cartoon / portrait-style ONNX models (NHWC, [-1,1], variable size multiple of 8)
+    // Inspired by style-portrait local ONNX pipeline
+    const CARTOON_STYLE_FILTERS = [
+      {
+        id: "st_cartoon_anime",
+        cat: "styletransfer",
+        name: "Anime",
+        modelUrl: "src/models/anime.onnx",
+        styleUrl: "src/styles/anime_preview.jpg",
+        type: "onnxcartoon",
+        params: []
+      },
+      {
+        id: "st_cartoon_comic",
+        cat: "styletransfer",
+        name: "Comic",
+        modelUrl: "src/models/comic.onnx",
+        styleUrl: "src/styles/comic_preview.jpg",
+        type: "onnxcartoon",
+        params: []
+      },
+      {
+        id: "st_cartoon_toon",
+        cat: "styletransfer",
+        name: "Toon",
+        modelUrl: "src/models/cartoon.onnx",
+        styleUrl: "src/styles/cartoon_preview.jpg",
+        type: "onnxcartoon",
+        params: []
+      },
+      {
+        id: "st_cartoon_sketch",
+        cat: "styletransfer",
+        name: "Sketch",
+        modelUrl: "src/models/sketch.onnx",
+        styleUrl: "src/styles/sketch_preview.jpg",
+        type: "onnxcartoon",
+        params: []
+      }
+    ];
+
+    // Tools category (e.g. Upscale)
+    const TOOL_FILTERS = [
+      {
+        id: "tool_upscale4x",
+        cat: "tools",
+        name: "Upscale 4×",
+        modelUrl: "src/models/upscale-4x.onnx",
+        type: "onnxupscale",
+        scale: 4,
         params: []
       }
     ];
@@ -1672,6 +1749,7 @@
     // Each style: name + reference image URL/path only
     const STYLE_FILTERS = [
       ...ONNX_STYLE_FILTERS,
+      ...CARTOON_STYLE_FILTERS,
       {
         id: "st_monalisa",
         cat: "styletransfer",
@@ -2254,7 +2332,7 @@
 
 
     function findFilterById(id) {
-      return FILTERS.find(f => f.id === id) || STYLE_FILTERS.find(f => f.id === id);
+      return FILTERS.find(f => f.id === id) || STYLE_FILTERS.find(f => f.id === id) || TOOL_FILTERS.find(f => f.id === id);
     }
 
     const STYLE_MODEL_URLS = {
@@ -2420,8 +2498,9 @@
     }
 
     async function ensureOnnxModels(onProgress) {
-      if (STATE.onnxReady && Object.keys(STATE.onnxSessions).length === ONNX_STYLE_FILTERS.length) {
-        if (typeof onProgress === "function") onProgress(ONNX_STYLE_FILTERS.length, ONNX_STYLE_FILTERS.length);
+      const allStyleOnnx = [...ONNX_STYLE_FILTERS, ...CARTOON_STYLE_FILTERS];
+      if (STATE.onnxReady && Object.keys(STATE.onnxSessions).length >= allStyleOnnx.length) {
+        if (typeof onProgress === "function") onProgress(allStyleOnnx.length, allStyleOnnx.length);
         return STATE.onnxSessions;
       }
       if (STATE.onnxLoading) return STATE.onnxLoading;
@@ -2435,10 +2514,10 @@
           }
           configureOrt();
           const sessions = {};
-          const total = ONNX_STYLE_FILTERS.length;
+          const total = allStyleOnnx.length;
           let loaded = 0;
-          // Load models sequentially to limit peak memory; each is ~6.6 MB
-          for (const f of ONNX_STYLE_FILTERS) {
+          // Load models sequentially to limit peak memory
+          for (const f of allStyleOnnx) {
             if (STATE.onnxSessions[f.id]) {
               sessions[f.id] = STATE.onnxSessions[f.id];
               loaded++;
@@ -2565,26 +2644,167 @@
         const results = await session.run(feeds);
         const outputName = session.outputNames[0];
         const outTensor = results[outputName];
+        // Always restore original dimensions
         return onnxOutputToCanvas(outTensor, sw, sh, contentBox);
       });
     }
 
+    /** Cartoon/portrait ONNX: NHWC float32 [-1,1], size multiple of 8 (from style-portrait.html) */
+    function canvasToCartoonInput(source, maxSide = 512) {
+      let w = source.width || source.naturalWidth;
+      let h = source.height || source.naturalHeight;
+      const scale = Math.min(maxSide / Math.max(w, h), 1);
+      w = alignDim(Math.round(w * scale));
+      h = alignDim(Math.round(h * scale));
+      const c = createCanvas(w, h);
+      const ctx = c.getContext("2d", { willReadFrequently: true });
+      ctx.drawImage(source, 0, 0, w, h);
+      const data = ctx.getImageData(0, 0, w, h).data;
+      const float32 = new Float32Array(1 * h * w * 3);
+      for (let i = 0, j = 0; i < data.length; i += 4, j += 3) {
+        float32[j]     = data[i]     / 127.5 - 1;
+        float32[j + 1] = data[i + 1] / 127.5 - 1;
+        float32[j + 2] = data[i + 2] / 127.5 - 1;
+      }
+      return { tensor: new ort.Tensor("float32", float32, [1, h, w, 3]), w, h };
+    }
+
+    function cartoonOutputToCanvas(tensor, outW, outH) {
+      const data = tensor.data;
+      const dims = tensor.dims;
+      // Expect NHWC [1,H,W,3] or NCHW [1,3,H,W]
+      let h, w, isNhwc;
+      if (dims.length === 4 && dims[3] === 3) {
+        isNhwc = true; h = dims[1]; w = dims[2];
+      } else {
+        isNhwc = false; h = dims[2]; w = dims[3];
+      }
+      const plane = w * h;
+      const tmp = createCanvas(w, h);
+      const imgData = tmp.getContext("2d").createImageData(w, h);
+      for (let i = 0; i < plane; i++) {
+        let r, g, b;
+        if (isNhwc) {
+          r = data[i * 3]; g = data[i * 3 + 1]; b = data[i * 3 + 2];
+        } else {
+          r = data[i]; g = data[plane + i]; b = data[2 * plane + i];
+        }
+        imgData.data[i * 4]     = Math.min(255, Math.max(0, (r + 1) * 127.5));
+        imgData.data[i * 4 + 1] = Math.min(255, Math.max(0, (g + 1) * 127.5));
+        imgData.data[i * 4 + 2] = Math.min(255, Math.max(0, (b + 1) * 127.5));
+        imgData.data[i * 4 + 3] = 255;
+      }
+      tmp.getContext("2d").putImageData(imgData, 0, 0);
+      // Restore original dimensions
+      const out = createCanvas(outW, outH);
+      out.getContext("2d").drawImage(tmp, 0, 0, outW, outH);
+      return out;
+    }
+
+    async function runOnnxCartoon(filter, sourceCanvas) {
+      await ensureOnnxModels();
+      const session = STATE.onnxSessions[filter.id];
+      if (!session) throw new Error("Cartoon model not loaded: " + filter.name);
+      const sw = sourceCanvas.width;
+      const sh = sourceCanvas.height;
+      return enqueueOnnxRun(async () => {
+        const { tensor } = canvasToCartoonInput(sourceCanvas, 512);
+        const inputName = session.inputNames[0];
+        const results = await session.run({ [inputName]: tensor });
+        const outTensor = results[session.outputNames[0]];
+        return cartoonOutputToCanvas(outTensor, sw, sh);
+      });
+    }
+
+    /** Upscale 4× — NCHW [0,1] inspired by a.html; output is scale× larger */
+    function canvasToUpscaleInput(source, maxSide = 512) {
+      let w = source.width;
+      let h = source.height;
+      const scale = Math.min(1, maxSide / Math.max(w, h));
+      w = Math.round(w * scale);
+      h = Math.round(h * scale);
+      const c = createCanvas(w, h);
+      const ctx = c.getContext("2d", { willReadFrequently: true });
+      ctx.drawImage(source, 0, 0, w, h);
+      const imgData = ctx.getImageData(0, 0, w, h);
+      const data = imgData.data;
+      const floatData = new Float32Array(3 * w * h);
+      for (let i = 0; i < w * h; i++) {
+        floatData[i] = data[i * 4] / 255;
+        floatData[w * h + i] = data[i * 4 + 1] / 255;
+        floatData[2 * w * h + i] = data[i * 4 + 2] / 255;
+      }
+      return { tensor: new ort.Tensor("float32", floatData, [1, 3, h, w]), w, h };
+    }
+
+    function upscaleOutputToCanvas(tensor) {
+      const [_, c, h, w] = tensor.dims;
+      const data = tensor.data;
+      const out = createCanvas(w, h);
+      const ctx = out.getContext("2d");
+      const imgData = ctx.createImageData(w, h);
+      for (let i = 0; i < w * h; i++) {
+        imgData.data[i * 4]     = Math.min(255, Math.max(0, data[i] * 255));
+        imgData.data[i * 4 + 1] = Math.min(255, Math.max(0, data[w * h + i] * 255));
+        imgData.data[i * 4 + 2] = Math.min(255, Math.max(0, data[2 * w * h + i] * 255));
+        imgData.data[i * 4 + 3] = 255;
+      }
+      ctx.putImageData(imgData, 0, 0);
+      return out;
+    }
+
+    async function ensureUpscaleModel() {
+      if (STATE.onnxSessions["tool_upscale4x"]) return STATE.onnxSessions["tool_upscale4x"];
+      if (typeof ort === "undefined") await loadScript("src/ort.min.js");
+      if (typeof ort === "undefined") throw new Error("ONNX Runtime failed to load");
+      configureOrt();
+      const f = TOOL_FILTERS[0];
+      const session = await ort.InferenceSession.create(f.modelUrl, {
+        executionProviders: ["webgpu", "wasm"],
+        graphOptimizationLevel: "all"
+      });
+      STATE.onnxSessions["tool_upscale4x"] = session;
+      return session;
+    }
+
+    async function runOnnxUpscale(filter, sourceCanvas) {
+      const session = await ensureUpscaleModel();
+      return enqueueOnnxRun(async () => {
+        const { tensor } = canvasToUpscaleInput(sourceCanvas, 512);
+        const inputName = session.inputNames[0];
+        const results = await session.run({ [inputName]: tensor });
+        return upscaleOutputToCanvas(results[session.outputNames[0]]);
+      });
+    }
+
+    async function prepareToolsCategory() {
+      try {
+        setStylizingUI(true, "Loading upscale model…", { showHint: true, indeterminate: true });
+        await ensureUpscaleModel();
+        setStylizingUI(false);
+      } catch (e) {
+        console.error(e);
+        setStylizingUI(false);
+        toastError(e.message || "Failed to load upscale model");
+      }
+    }
+
     async function prepareStyleTransferCategory() {
       // Already fully cached — skip any loading UI
-      if (STATE.onnxReady && Object.keys(STATE.onnxSessions || {}).length === ONNX_STYLE_FILTERS.length) {
+      if (STATE.onnxReady && Object.keys(STATE.onnxSessions || {}).length >= (ONNX_STYLE_FILTERS.length + CARTOON_STYLE_FILTERS.length)) {
         setStyleCardsEnabled(true);
         return;
       }
       // Simple patient message + progress bar (no stage details)
-      setStylizingUI(true, "Loading style engine…", { showHint: true, progress: 8 });
+      setStylizingUI(true, "Loading…", { showHint: true, progress: 8 });
       setStyleCardsEnabled(false);
       const errors = [];
       try {
         await ensureOnnxModels((loaded, total) => {
           const p = 10 + Math.round((loaded / Math.max(1, total)) * 85);
-          setStylizingUI(true, "Loading style engine…", { showHint: true, progress: p });
+          setStylizingUI(true, "Loading…", { showHint: true, progress: p });
         });
-        setStylizingUI(true, "Loading style engine…", { showHint: true, progress: 98 });
+        setStylizingUI(true, "Loading…", { showHint: true, progress: 98 });
       } catch (e) {
         console.error(e);
         errors.push(e.message || "ONNX styles failed");
@@ -2603,7 +2823,7 @@
     function setStyleCardsEnabled(on) {
       $$(".filter-card").forEach(card => {
         const f = findFilterById(card.dataset.id);
-        if (f?.type === "styletransfer" || f?.type === "onnxstyle") {
+        if (f?.type === "styletransfer" || f?.type === "onnxstyle" || f?.type === "onnxcartoon") {
           card.classList.toggle("is-disabled", !on);
           card.disabled = !on;
         }
@@ -2644,8 +2864,8 @@
       if (!STATE.selectedFilter || !STATE.committedCanvas || !STATE.hasImage) return;
       const filter = STATE.selectedFilter;
       const token = (STATE._previewToken = (STATE._previewToken || 0) + 1);
-      if (filter.type === "styletransfer" || filter.type === "onnxstyle") {
-        setStylizingUI(true, "Stylizing…", { showHint: false, indeterminate: true });
+      if (filter.type === "styletransfer" || filter.type === "onnxstyle" || filter.type === "onnxcartoon" || filter.type === "onnxupscale") {
+        setStylizingUI(true, filter.type === "onnxupscale" ? "Upscaling…" : "Stylizing…", { showHint: false, indeterminate: true });
       }
       STATE.isProcessing = true;
       try {
@@ -2654,6 +2874,10 @@
           result = await runStyleTransfer(filter, STATE.paramValues, STATE.committedCanvas);
         } else if (filter.type === "onnxstyle") {
           result = await runOnnxStyleTransfer(filter, STATE.committedCanvas);
+        } else if (filter.type === "onnxcartoon") {
+          result = await runOnnxCartoon(filter, STATE.committedCanvas);
+        } else if (filter.type === "onnxupscale") {
+          result = await runOnnxUpscale(filter, STATE.committedCanvas);
         } else {
           result = runFilter(filter, STATE.paramValues, STATE.committedCanvas);
         }
@@ -2679,7 +2903,7 @@
     async function commitApply() {
       if (!STATE.dirty || !STATE.previewCanvas || !STATE.hasImage) return;
       const filter = STATE.selectedFilter;
-      if (filter && (filter.type === "styletransfer" || filter.type === "onnxstyle")) {
+      if (filter && (filter.type === "styletransfer" || filter.type === "onnxstyle" || filter.type === "onnxcartoon" || filter.type === "onnxupscale")) {
         setStylizingUI(true, "Applying…", { showHint: false, indeterminate: true });
         // Yield so the loading overlay paints before we commit
         await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
@@ -2866,7 +3090,7 @@
       nav.innerHTML = "";
       CATEGORIES.forEach(c => {
         const btn = document.createElement("button");
-        btn.className = "cat-btn" + (c.id === STATE.activeCat ? " active" : "") + (c.advanced ? " cat-advanced" : "");
+        btn.className = "cat-btn" + (c.id === STATE.activeCat ? " active" : "") + (c.advanced ? " cat-advanced" : "") + (c.tools ? " cat-tools" : "");
         btn.textContent = c.label;
         btn.dataset.cat = c.id;
         btn.addEventListener("click", async () => {
@@ -2877,6 +3101,9 @@
           buildFilterGrid();
           if (c.id === "styletransfer" && STATE.hasImage) {
             await prepareStyleTransferCategory();
+          }
+          if (c.id === "tools" && STATE.hasImage) {
+            await prepareToolsCategory();
           }
         });
         nav.appendChild(btn);
@@ -2890,8 +3117,10 @@
       if (STATE.activeCat === "popular") {
         list = POPULAR_IDS.map(id => FILTERS.find(f => f.id === id)).filter(Boolean);
       } else if (STATE.activeCat === "styletransfer") {
-        // Only original ONNX styles are active; TF-based styles (Mona Lisa, etc.) are disabled
-        list = STYLE_FILTERS.filter(f => f.type === "onnxstyle");
+        // ONNX fast styles + cartoon styles (TF-based famous art styles remain available via styleUrl previews)
+        list = STYLE_FILTERS.filter(f => f.type === "onnxstyle" || f.type === "onnxcartoon" || f.type === "styletransfer");
+      } else if (STATE.activeCat === "tools") {
+        list = TOOL_FILTERS;
       } else {
         list = FILTERS.filter(f => f.cat === STATE.activeCat);
       }
@@ -2902,9 +3131,9 @@
       list.forEach(f => {
         const card = document.createElement("button");
         const needsStyle = f.type === "styletransfer";
-        const needsOnnx = f.type === "onnxstyle";
-        const disabled = (needsStyle && !styleReady) || (needsOnnx && !onnxReady);
-        card.className = "filter-card" + (disabled ? " is-disabled" : "") + (needsStyle || needsOnnx ? " style-transfer" : "");
+        const needsOnnx = f.type === "onnxstyle" || f.type === "onnxcartoon" || f.type === "onnxupscale";
+        const disabled = (needsStyle && !styleReady) || (needsOnnx && !onnxReady && f.type !== "onnxupscale");
+        card.className = "filter-card" + (disabled ? " is-disabled" : "") + (needsStyle || f.type === "onnxstyle" || f.type === "onnxcartoon" ? " style-transfer" : "");
         card.dataset.id = f.id;
         card.title = f.name;
         if (disabled) card.disabled = true;
@@ -2915,7 +3144,7 @@
             return;
           }
           if (needsStyle && !STATE.styleModel?.styleNet) return;
-          if (needsOnnx && !STATE.onnxReady) return;
+          if ((f.type === "onnxstyle" || f.type === "onnxcartoon") && !STATE.onnxReady) return;
           selectFilter(f, card);
         });
         grid.appendChild(card);
@@ -3055,46 +3284,25 @@
           const ctx = canvas.getContext("2d");
           canvas.width = size;
           canvas.height = size;
-          if (f.type === "styletransfer") {
+          if (f.type === "styletransfer" || f.type === "onnxstyle" || f.type === "onnxcartoon") {
+            // Preview = ready-made style artwork (never apply style on the input image for thumbs)
             card.classList.add("style-transfer");
             const img = new Image();
-            // Local Styles/*.jpg — same origin; do not set crossOrigin
             img.onload = () => {
               const sc = Math.max(size / img.naturalWidth, size / img.naturalHeight);
               const w = img.naturalWidth * sc, h = img.naturalHeight * sc;
               ctx.drawImage(img, (size - w) / 2, (size - h) / 2, w, h);
             };
             img.onerror = () => { ctx.fillStyle = "#333"; ctx.fillRect(0,0,size,size); };
-            img.src = f.styleUrl;
-          } else if (f.type === "onnxstyle") {
-            card.classList.add("style-transfer");
-            // Placeholder until model runs
-            ctx.drawImage(thumbSrc, 0, 0);
-            if (STATE.onnxReady && STATE.onnxSessions[f.id]) {
-              const cacheId = f.id + "|" + onnxCacheKey;
-              if (STATE.onnxThumbCache[cacheId]) {
-                ctx.drawImage(STATE.onnxThumbCache[cacheId], 0, 0);
-              } else {
-                // Async: apply style to thumb, then paint
-                (async () => {
-                  try {
-                    const styled = await runOnnxStyleTransfer(f, thumbSrc);
-                    const thumb = resizeToThumb(styled, size);
-                    STATE.onnxThumbCache[cacheId] = thumb;
-                    // Card may have been rebuilt
-                    const liveCanvas = card.querySelector("canvas");
-                    if (liveCanvas && card.dataset.id === f.id) {
-                      const liveCtx = liveCanvas.getContext("2d");
-                      liveCanvas.width = size;
-                      liveCanvas.height = size;
-                      liveCtx.drawImage(thumb, 0, 0);
-                    }
-                  } catch (err) {
-                    console.warn("ONNX thumb preview failed", f.id, err);
-                  }
-                })();
-              }
-            }
+            img.src = f.styleUrl || "";
+          } else if (f.type === "onnxupscale") {
+            ctx.fillStyle = "#0d9488";
+            ctx.fillRect(0, 0, size, size);
+            ctx.fillStyle = "#fff";
+            ctx.font = "bold 14px system-ui";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText("4×", size / 2, size / 2);
           } else if (f.type === "pixels" && P) {
             ctx.drawImage(thumbSrc, 0, 0);
             const data = ctx.getImageData(0, 0, size, size);
